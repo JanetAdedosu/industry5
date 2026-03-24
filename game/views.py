@@ -36,3 +36,38 @@ def calculate_round1(choice, kpis, v):
         "resilience": clamp(kpis["resilience"] + Re_base + Re_opt),
         "digital": clamp(kpis["digital"] + D_base + D_opt),
     }
+
+
+
+def process_decision(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        choice = data["choice"]
+        kpis = data["kpis"]
+        cash = data["cash"]
+        variables = data["variables"]
+
+        new_kpis = calculate_round1(choice, kpis, variables)
+
+        # save to database
+        game = GameSession.objects.create(
+            cash=cash,
+            financial=new_kpis["financial"],
+            human=new_kpis["human"],
+            green=new_kpis["green"],
+            resilience=new_kpis["resilience"],
+            digital=new_kpis["digital"]
+        )
+
+        Decision.objects.create(
+            game=game,
+            round_number=1,
+            choice=choice,
+            **variables
+        )
+
+        return JsonResponse({
+            "kpis": new_kpis,
+            "cash": cash
+        })
