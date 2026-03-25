@@ -544,32 +544,53 @@
         document.getElementById('confirmBtn').disabled = false;
     }
 
-    function submitDecision() {
-        if (!selectedOptionKey) return;
+    
         
-        const round = roundsData[gameState.currentRound];
-        const opt = round.options[selectedOptionKey];
+                   
+
+        function submitDecision() {
+            if (!selectedOptionKey) return;
         
-        if (gameState.cash < opt.cost) {
-            alert(`Insufficient funds! Need €${opt.cost.toLocaleString()}`);
-            return;
+            fetch('/process/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    choice: selectedOptionKey,
+                    kpis: gameState.kpis,
+                    cash: gameState.cash,
+        
+                    variables: {
+                        R: 50,
+                        E: 40,
+                        S: 30,
+                        B: 3,
+                        T: 60,
+                        P: 5,
+                        A: 50
+                    }
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("SERVER RESPONSE:", data); //debugging
+        
+                gameState.kpis = data.kpis;
+                gameState.cash = data.cash;
+        
+                updateKPIs();
+                updateSidebar();
+        
+                alert("Decision processed!");
+            })
+            .catch(err => {
+                console.error("ERROR:", err);
+                alert("Something went wrong!");
+            });
         }
         
-        gameState.cash -= opt.cost;
-        for (let [k, v] of Object.entries(opt.impact)) {
-            gameState.kpis[k] = Math.min(100, Math.max(0, gameState.kpis[k] + v));
-        }
-        
-        gameState.history.push({ round: gameState.currentRound, cost: opt.cost, impacts: opt.impact });
-        
-        updateSidebar();
-        updateKPIs();
-        
-        const changesHtml = Object.entries(opt.impact).map(([k, v]) => 
-            `<div><strong>${k.toUpperCase()}:</strong> ${v > 0 ? '+' : ''}${Math.round(v)}</div>`
-        ).join('');
-        
-        document.getElementById('resultPanel').innerHTML = `
+        {% comment %} document.getElementById('resultPanel').innerHTML = `
             <div class="result-block">
                 <h3>Round ${gameState.currentRound} Complete</h3>
                 <div style="margin: 16px 0; padding: 12px; background: #0a1822; border-radius: 12px;">
@@ -591,7 +612,7 @@
         
         showSection('results');
         updateHistory();
-    }
+    } {% endcomment %}
 
     function advanceRound() {
         if (gameState.currentRound < 4) {
