@@ -547,49 +547,83 @@
     
         
                    
+    function submitDecision() {
 
-        function submitDecision() {
-            if (!selectedOptionKey) return;
-        
-            fetch('/process/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    choice: selectedOptionKey,
-                    round: gameState.currentRound,   // defining the rounds 
-                    kpis: gameState.kpis,
-                    cash: gameState.cash,
-                    variables: {
-                        R: 50,
-                        E: 40,
-                        S: 30,
-                        B: 3,
-                        T: 60,
-                        P: 5,
-                        A: 50
-                    }
-                })
-            .then(res => res.json())
-            .then(data => {
-                console.log("SERVER RESPONSE:", data); //debugging
-        
-                gameState.kpis = data.kpis;
-                gameState.cash = data.cash;
-        
-                updateKPIs();
-                updateSidebar();
-        
-                alert("Decision processed!");
+        if (!selectedOptionKey) return;
+    
+        fetch('/process/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+    
+            body: JSON.stringify({
+                choice: selectedOptionKey,
+                round: gameState.currentRound,
+                kpis: gameState.kpis,
+                cash: gameState.cash,
+    
+                variables: {
+                    R: 50,
+                    E: 40,
+                    S: 30,
+                    B: 3,
+                    T: 60,
+                    P: 5,
+                    A: 50
+                }
             })
-            .catch(err => {
-                console.error("ERROR:", err);
-                alert("Something went wrong!");
+    
+        })   
+    
+        .then(response => response.json())
+    
+        .then(data => {
+    
+            console.log("Server response:", data);
+    
+            // Update state
+            gameState.kpis = data.kpis;
+            gameState.cash = data.cash;
+    
+            // Save history
+            gameState.history.push({
+                round: gameState.currentRound,
+                cost: roundsData[gameState.currentRound]
+                        .options[selectedOptionKey].cost
             });
-        }
+    
+            // Move to next round
+            gameState.currentRound = data.next_round;
+    
+            updateKPIs();
+            updateSidebar();
+            updateHistory();
+    
+            // Check game end
+            if (gameState.currentRound > 4) {
+    
+                showFinalSummary();
+    
+            } else {
+    
+                renderDecisions();
+                showSection('decisions');
+    
+            }
+    
+        })
+    
+        .catch(error => {
+    
+            console.error("Fetch Error:", error);
+    
+        });
+    
+    }
+                
         
-        {% comment %} document.getElementById('resultPanel').innerHTML = `
+        /* document.getElementById('resultPanel').innerHTML = `
             <div class="result-block">
                 <h3>Round ${gameState.currentRound} Complete</h3>
                 <div style="margin: 16px 0; padding: 12px; background: #0a1822; border-radius: 12px;">
@@ -611,7 +645,7 @@
         
         showSection('results');
         updateHistory();
-    } {% endcomment %}
+    } */
 
     function advanceRound() {
         if (gameState.currentRound < 4) {
