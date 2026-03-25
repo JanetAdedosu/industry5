@@ -93,11 +93,11 @@ def process_decision(request):
             new_kpis = calculate_round4(choice, kpis, variables)
             cash -= 90000
 
-        # ✅ LIMIT VALUES
+        # LIMIT VALUES
         for key in new_kpis:
             new_kpis[key] = max(0, min(100, new_kpis[key]))
 
-        # ✅ SAVE GAME SESSION
+        #  SAVE GAME SESSION
         game = GameSession.objects.create(
             cash=cash,
             financial=new_kpis["financial"],
@@ -107,10 +107,10 @@ def process_decision(request):
             digital=new_kpis["digital"]
         )
 
-        # ✅ SAVE DECISION CORRECTLY
+        # SAVE DECISION CORRECTLY
         Decision.objects.create(
             game=game,
-            round_number=round_number,   # ✅ FIXED
+            round_number=round_number,   
             choice=choice,
             **variables
         )
