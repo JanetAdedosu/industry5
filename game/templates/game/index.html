@@ -558,9 +558,9 @@
                 },
                 body: JSON.stringify({
                     choice: selectedOptionKey,
+                    round: gameState.currentRound,   // defining the rounds 
                     kpis: gameState.kpis,
                     cash: gameState.cash,
-        
                     variables: {
                         R: 50,
                         E: 40,
@@ -571,7 +571,6 @@
                         A: 50
                     }
                 })
-            })
             .then(res => res.json())
             .then(data => {
                 console.log("SERVER RESPONSE:", data); //debugging
