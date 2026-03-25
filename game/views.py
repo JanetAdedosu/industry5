@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+import json
+
+from .models import GameSession, Decision
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -38,7 +43,7 @@ def calculate_round1(choice, kpis, v):
     }
 
 
-
+@csrf_exempt
 def process_decision(request):
     if request.method == "POST":
         data = json.loads(request.body)
