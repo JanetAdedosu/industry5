@@ -42,20 +42,62 @@ def calculate_round1(choice, kpis, v):
         "digital": clamp(kpis["digital"] + D_base + D_opt),
     }
 
+def calculate_round1(choice, kpis, variables):
+    kpis["human"] += 10
+    kpis["green"] += 2
+    return kpis
+
+
+def calculate_round2(choice, kpis, variables):
+    kpis["green"] += 15
+    kpis["digital"] += 10
+    return kpis
+
+
+def calculate_round3(choice, kpis, variables):
+    kpis["resilience"] += 20
+    return kpis
+
+
+def calculate_round4(choice, kpis, variables):
+    kpis["green"] += 25
+    kpis["resilience"] += 10
+    return kpis
+
 
 @csrf_exempt
 def process_decision(request):
     if request.method == "POST":
         data = json.loads(request.body)
 
+        round_number = data["round"]
         choice = data["choice"]
         kpis = data["kpis"]
         cash = data["cash"]
         variables = data["variables"]
 
-        new_kpis = calculate_round1(choice, kpis, variables)
+        #  CORRECT FORMULA PER ROUND
+        if round_number == 1:
+            new_kpis = calculate_round1(choice, kpis, variables)
+            cash -= 100000
 
-        # save to database
+        elif round_number == 2:
+            new_kpis = calculate_round2(choice, kpis, variables)
+            cash -= 120000
+
+        elif round_number == 3:
+            new_kpis = calculate_round3(choice, kpis, variables)
+            cash -= 80000
+
+        elif round_number == 4:
+            new_kpis = calculate_round4(choice, kpis, variables)
+            cash -= 90000
+
+        # ✅ LIMIT VALUES
+        for key in new_kpis:
+            new_kpis[key] = max(0, min(100, new_kpis[key]))
+
+        # ✅ SAVE GAME SESSION
         game = GameSession.objects.create(
             cash=cash,
             financial=new_kpis["financial"],
@@ -65,14 +107,16 @@ def process_decision(request):
             digital=new_kpis["digital"]
         )
 
+        # ✅ SAVE DECISION CORRECTLY
         Decision.objects.create(
             game=game,
-            round_number=1,
+            round_number=round_number,   # ✅ FIXED
             choice=choice,
             **variables
         )
 
         return JsonResponse({
             "kpis": new_kpis,
-            "cash": cash
+            "cash": cash,
+            "next_round": round_number + 1
         })
