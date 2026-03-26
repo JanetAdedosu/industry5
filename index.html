@@ -3,18 +3,741 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My web page eiii</title>
+    <title>BuddyBikes | Industry 5.0 Transition Simulation</title>
     <style>
-        img {
-            max-width: 100%;
-            border-radius: 50px;
-            height: auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a1a2f;
+            color: #eef2ff;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .screen.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            font-weight: 600;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            background: #2c6e9e;
+            color: white;
+            font-size: 16px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .landing-card {
+            background: rgba(18, 30, 46, 0.95);
+            border-radius: 32px;
+            padding: 48px 32px;
+            text-align: center;
+            max-width: 800px;
+            margin: 60px auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .company-name {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #7ab3c8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .industry-badge {
+            background: #111c2a;
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: inline-block;
+            margin: 10px;
+            border-bottom: 3px solid #2c6e9e;
+        }
+
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 780px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: #0f1e2c;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid #253c4e;
+            height: fit-content;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin: 6px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .nav-item:hover {
+            background: #1a3346;
+        }
+        .nav-item.active {
+            background: #2c6e9e;
+            color: white;
+        }
+
+        .main-panel {
+            background: #0f1e2c;
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #253c4e;
+            min-height: 65vh;
+        }
+
+        .content-section {
+            display: none;
+        }
+        .content-section.active-section {
+            display: block;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .kpi-card {
+            background: #0a1822;
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            border-left: 4px solid;
+        }
+        .kpi-card.financial { border-left-color: #f5a65a; }
+        .kpi-card.human { border-left-color: #5a9eff; }
+        .kpi-card.green { border-left-color: #4cbf7e; }
+        .kpi-card.resilience { border-left-color: #b77ef0; }
+        .kpi-card.digital { border-left-color: #f06292; }
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+        .progress-track {
+            height: 6px;
+            background: #1e3345;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+            align-items: start;
+        }
+        .option-card {
+            background: #0a1822;
+            border: 1px solid #2c4458;
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .option-card:hover {
+            border-color: #4c9f8c;
+            transform: translateY(-3px);
+        }
+        .option-card.selected {
+            border-color: #4c9f8c;
+            background: #102432;
+        }
+        .option-letter {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #2c6e9e;
+            border-radius: 12px;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+        .option-text {
+            color: #bcd0df;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            flex-grow: 1;
+            margin-bottom: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .option-text::-webkit-scrollbar {
+            width: 6px;
+        }
+        .option-text::-webkit-scrollbar-track {
+            background: #1e3345;
+            border-radius: 3px;
+        }
+        .option-text::-webkit-scrollbar-thumb {
+            background: #4c9f8c;
+            border-radius: 3px;
+        }
+
+        .base-decisions-panel {
+            background: #0a1822;
+            border-radius: 20px;
+            margin-top: 28px;
+            padding: 20px;
+            border: 1px solid #2c6e9e;
+        }
+        .base-decisions-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #7ab3c8;
+            border-left: 3px solid #4c9f8c;
+            padding-left: 12px;
+        }
+        .base-decision-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            margin-top: 8px;
+        }
+        .base-decision-item {
+            background: #05121c;
+            border-radius: 14px;
+            padding: 12px 16px;
+        }
+        .base-decision-label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #b0c4de;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .base-decision-label span:first-child {
+            font-weight: 600;
+        }
+        .base-decision-label span:last-child {
+            color: #4cbf7e;
+            font-weight: 600;
+        }
+        input.base-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0f1e2c;
+            border: 1px solid #2c6e9e;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        input.base-input:focus {
+            outline: none;
+            border-color: #4cbf7e;
+        }
+
+        .history-item {
+            background: #0a1822;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            border-left: 3px solid #4c9f8c;
+        }
+
+        .round-story {
+            background: #0a1822;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: #bcd0df;
+            max-height: 200px;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
-<img src="images/trea.jpeg">
-<p>@treasurejing</p>
-<p>I love to learn about webmail</p>
+
+<!-- LANDING SCREEN -->
+<div id="landingScreen" class="screen active">
+    <div class="container">
+        <div class="landing-card">
+            <div class="company-name">BUDDYBIKES</div>
+            <p style="margin: 12px 0 24px; color: #bcd0df;">BodyBike Frame Manufacturing</p>
+            <div style="margin: 24px 0;">
+                <span class="industry-badge">Industry 4.0</span>
+                <span style="margin: 0 12px;">→</span>
+                <span class="industry-badge" style="border-color: #4c9f8c;">Industry 5.0</span>
+            </div>
+            <button class="btn" id="startMissionBtn" style="font-size: 18px; padding: 14px 40px;">Begin Your Journey</button>
+        </div>
+    </div>
+</div>
+
+<!-- MISSION SCREEN -->
+<div id="missionScreen" class="screen">
+    <div class="container" style="max-width: 800px;">
+        <div class="landing-card" style="text-align: left;">
+            <h2 style="margin-bottom: 20px;">The BuddyBikes Story</h2>
+            <p style="margin: 16px 0; line-height: 1.6;">For 10 years, BuddyBikes has been a master of Industry 4.0. We used high-speed automation and data to build thousands of frames. We were fast, we were cheap, and we were profitable.</p>
+            <div style="background: #0a1822; padding: 20px; border-radius: 16px; margin: 20px 0;">
+                <strong>But the world has changed:</strong>
+                <ul style="margin-top: 12px; margin-left: 20px;">
+                    <li style="margin: 8px 0;">The Workers: Our team is exhausted. High-speed robots are efficient, but the human element—creativity and well-being—has been ignored.</li>
+                    <li style="margin: 8px 0;">The Planet: Our carbon footprint is too high, and modern customers are starting to walk away from dirty manufacturing.</li>
+                    <li style="margin: 8px 0;">The Market: One supply chain break shuts us down for weeks because we are too rigid.</li>
+                </ul>
+            </div>
+            <div style="background: #1d3a4e; padding: 20px; border-radius: 16px; margin: 20px 0;">
+                <strong>Your Mission</strong>
+                <p style="margin-top: 10px;">Lead our Industry 5.0 Transition. This is a shift in mindset: Human-Centric, Sustainable, and Resilient.</p>
+            </div>
+            <button class="btn" id="playNowBtn" style="width: 100%; margin-top: 20px;">Begin Round 1</button>
+        </div>
+    </div>
+</div>
+
+<!-- GAME DASHBOARD -->
+<div id="gameScreen" class="screen">
+    <div class="container">
+        <div class="dashboard-layout">
+            <div class="sidebar">
+                <h3 style="margin-bottom: 16px;">Navigation</h3>
+                <div class="nav-item active" data-section="about">About Company</div>
+                <div class="nav-item" data-section="kpis">KPIs</div>
+                <div class="nav-item" data-section="decisions">Strategic Decisions</div>
+                <div class="nav-item" data-section="results">Results History</div>
+                <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid #2a4458;">
+                    <div>Round: <strong id="sideRound">1</strong>/4</div>
+                    <div>Cash: €<span id="sideCash">500,000</span></div>
+                </div>
+            </div>
+
+            <div class="main-panel">
+                <div id="aboutSection" class="content-section active-section">
+                    <h2>BuddyBikes · BodyBike Division</h2>
+                    <p style="margin: 16px 0; color: #bcd0df;">BuddyBikes is a manufacturing company producing the structural frame of an electric bicycle called 'BodyBike'. The company is currently transitioning from Industry 4.0 to Industry 5.0, focusing on human-centric innovation, resilience, sustainability, and advanced digitalization.</p>
+                </div>
+
+                <div id="kpisSection" class="content-section">
+                    <h2>Current Performance Metrics</h2>
+                    <div class="kpi-grid" id="kpiDashboard"></div>
+                </div>
+
+                <div id="decisionsSection" class="content-section">
+                    <h2 id="roundTitle"></h2>
+                    <div class="round-story" id="roundStory"></div>
+                    <div id="optionsContainer" class="options-grid"></div>
+
+                    <div class="base-decisions-panel">
+                        <div class="base-decisions-title">⚙️ Base Decisions (Set values 0-100)</div>
+                        <div class="base-decision-group" id="baseDecisionsContainer"></div>
+                    </div>
+
+                    <button id="confirmBtn" class="btn" style="width: 100%; margin-top: 24px;" disabled>Confirm Strategy & Base Decisions</button>
+                </div>
+
+                <div id="resultsSection" class="content-section">
+                    <h2>Decision Outcomes</h2>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SUMMARY SCREEN -->
+<div id="summaryScreen" class="screen">
+    <div class="container" style="max-width: 800px;">
+        <div class="landing-card">
+            <h2>Transition Complete</h2>
+            <div id="summaryContent"></div>
+            <button class="btn" id="restartBtn" style="width: 100%; margin-top: 24px;">Play Again</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Round data with full descriptions
+    const roundsData = {
+        1: {
+            title: "Round 1: Human-Centric Foundation",
+            story: "BuddyBikes is a manufacturing company producing the structural frame of an electric bicycle called 'BodyBike'. The company is currently transitioning from Industry 4.0 to Industry 5.0, focusing on human-centric innovation, resilience, sustainability, and advanced digitalization. Industry 5.0 moves beyond automation and efficiency (Industry 4.0) toward a human-centric, sustainable, and resilient industrial model. It emphasizes collaboration between humans and intelligent systems, renewable energy usage, workforce upskilling, and ethical AI integration.",
+            options: {
+                A: { name: "Workforce Development Strategy", description: "BuddyBikes focuses mainly on strengthening its workforce and improving collaboration on the shop floor. The company launches an intensive training program for 60 production workers, costing €1,000 per worker for technical skills, safety, and flexible manufacturing methods (€60,000 total). The factory layout is redesigned to support team-based work and adaptable production cells, requiring €25,000 in workstation upgrades and ergonomic improvements. A small number of supportive digital tools and assistive devices are introduced for €15,000, but large-scale automation is not prioritized. The strategy emphasizes knowledgeable workers who can adjust processes and maintain production continuity.", cost: 100000, optEffects: { financial: -6, green: 2, human: 12, resilience: 8, digital: 4 } },
+                B: { name: "Collaborative Robotics Strategy", description: "BuddyBikes invests heavily in collaborative robotics to assist with tasks such as welding and frame assembly. The company purchases 10 collaborative robots (co-bots) at €45,000 per machine, resulting in an equipment investment of €450,000. These robots work alongside operators who supervise and guide the production process. To enable workers to operate and monitor the new systems, 20 operators receive specialized training at €1,200 per person (€24,000 total). Additional integration and sensor setup for the robotic workstations costs €40,000. Most of the investment is therefore directed toward acquiring and integrating advanced robotic equipment rather than large-scale workforce development.", cost: 450000, optEffects: { financial: -12, green: 1, human: 4, resilience: 5, digital: 14 } }
+            }
+        },
+        2: {
+            title: "Round 2: Green & Digital Integration",
+            story: "As BuddyBikes continues its transformation toward Industry 5.0, the management team meets to review the progress made during the first phase of the transition. While the initial initiatives improved collaboration between workers and technology, the company recognizes that further steps are needed to strengthen its production system and prepare the factory for future challenges. Managers, engineers, and production supervisors discuss how the factory can continue evolving while maintaining efficient operations and supporting the growing role of employees in the manufacturing process.",
+            options: {
+                A: { name: "Workforce-Driven Sustainability", description: "BuddyBikes prioritizes workforce involvement in improving factory operations. The company launches a green skills training program for 60 production workers, focusing on energy-efficient manufacturing practices, waste reduction techniques, and improved material handling methods. The training costs €800 per worker (€48,000 total). In addition, BuddyBikes introduces an internal improvement program that encourages teams of workers to propose and implement ideas to reduce energy consumption and material waste on the shop floor, supported by a €20,000 improvement fund. To support these efforts, the company installs digital energy-monitoring dashboards across production cells for €25,000, allowing employees to track machine performance and resource usage in real time. Finally, ergonomic improvements such as adjustable workstations, improved lighting, and noise reduction measures are implemented at a cost of €30,000 to improve working conditions across the factory.", cost: 123000, optEffects: { financial: -5, green: 12, human: 10, resilience: 9, digital: 5 } },
+                B: { name: "Technology-Driven Sustainability", description: "BuddyBikes focuses primarily on technological upgrades to improve the efficiency of factory operations. The company invests in renewable energy infrastructure by installing solar panels on the factory roof to supply part of the facility's electricity needs, costing €120,000. To optimize energy consumption across machines and production processes, an advanced smart energy management system is implemented for €35,000. In addition, a battery storage system is installed to store excess renewable energy and ensure stable energy supply during peak production periods, costing €55,000. To operate and maintain the new systems, 15 technicians receive specialized training in energy management and renewable infrastructure at €1,000 per worker (€15,000 total). Most of the investment is directed toward upgrading the factory's technological infrastructure.", cost: 225000, optEffects: { financial: -10, green: 15, human: 5, resilience: 10, digital: 9 } },
+                C: { name: "Balanced Sustainability Strategy", description: "BuddyBikes adopts a balanced strategy that combines moderate technological upgrades with workforce development initiatives. The company introduces energy-efficient production equipment and machine upgrades that reduce electricity consumption during welding and frame assembly processes, costing €90,000. At the same time, 40 workers receive training on improved production practices, material efficiency, and resource management at €900 per worker (€36,000 total). The company also implements a waste-sorting and material recycling system within the factory for €18,000 to better manage production scrap. Finally, a digital platform is introduced for €16,000 that allows employees to track factory performance indicators and contribute suggestions for operational improvements. This approach combines equipment upgrades with worker participation in improving factory processes.", cost: 160000, optEffects: { financial: -7, green: 13, human: 8, resilience: 10, digital: 7 } }
+            }
+        },
+        3: {
+            title: "Round 3: Resilience and Financial Stability",
+            story: "As BuddyBikes continues its transition toward Industry 5.0, management evaluates alternative strategies to strengthen system stability and manage financial resources in the production of the BodyBike frame. The focus of this round is on supplier structure, maintenance planning, and inventory management.",
+            options: {
+                A: { name: "High Resilience Strategy", description: "BuddyBikes adopts a resilience-oriented strategy aimed at ensuring stable and uninterrupted production of the BodyBike frame. To reduce the risk of supply disruptions, BuddyBikes expands its supplier network by introducing two additional backup suppliers for critical frame components such as steel tubing and welding materials. These suppliers must go through qualification, quality checks, and onboarding processes. The cost associated with identifying, evaluating, and integrating these backup suppliers is estimated at €35,000. In addition, BuddyBikes strengthens its preventive maintenance program for key production equipment including welding stations, cutting machines, and frame alignment systems. Maintenance activities are performed more frequently to reduce the likelihood of equipment failure and production downtime. The cost of this expanded maintenance program is €30,000. To further enhance production resilience, BuddyBikes increases its inventory buffer and maintains approximately four weeks of essential materials used in the manufacturing of BodyBike frames. This higher inventory level provides protection against supplier delays or temporary supply disruptions. The cost of maintaining this inventory buffer is €40,000.", cost: 105000, optEffects: { financial: -8, green: 4, human: 6, resilience: 15, digital: 3 } },
+                B: { name: "Cost Efficiency Strategy", description: "BuddyBikes focuses on cost efficiency and lean operations while continuing the current production process for the BodyBike frame. Instead of expanding the supplier network, the company continues working with its existing suppliers for critical frame components. By avoiding the qualification and onboarding of additional backup suppliers, BuddyBikes reduces administrative and procurement costs. This approach requires no additional investment in supplier expansion. The company also maintains the current preventive maintenance schedule for key equipment such as welding stations and frame alignment machines. Maintenance activities remain limited to routine inspections and necessary repairs. The cost for maintaining this program is €20,000. To reduce working capital requirements, BuddyBikes adjusts its inventory policy and keeps approximately two weeks of materials for essential components used in BodyBike frame manufacturing. This lean inventory strategy requires €25,000 allocated to inventory.", cost: 45000, optEffects: { financial: -3, green: 2, human: 3, resilience: 6, digital: 2 } },
+                C: { name: "Balanced Stability Strategy", description: "BuddyBikes chooses a different approach and introduces only one more backup supplier for steel tubing and any other crucial component. BuddyBikes still maintains a strong relationship with its existing suppliers for remaining materials. The cost associated with identifying, evaluating, and integrating the backup supplier is estimated at €20,000. The company decides to invest €25,000 in sensors and performance monitoring software as a predictive maintenance system such that maintenance is performed only when necessary and not on a fixed schedule. BuddyBikes adjusts its inventory policy and keeps approximately three weeks of essential materials. Inventory levels are further adjusted based on demand forecasts and supplier reliability. The associated cost with this inventory policy is estimated at €30,000.", cost: 75000, optEffects: { financial: -5, green: 3, human: 5, resilience: 10, digital: 4 } }
+            }
+        },
+        4: {
+            title: "Round 4: Sustainable Resilience",
+            story: "As BuddyBikes advances further into Industry 5.0, the management now focuses on balancing environmental sustainability (Green Index) with long-term operational resilience in the production of the BodyBike frame. This round challenges decision-makers to integrate eco-friendly practices while maintaining system robustness and adaptability.",
+            options: {
+                A: { name: "Green Leadership Strategy", description: "BuddyBikes adopts an ambitious sustainability-driven strategy aimed at significantly improving its Green Index while reinforcing long-term resilience. The company invests in recycled and low-carbon materials, increasing the recycling rate of steel and aluminum components used in BodyBike frames to 60%. This transition requires supplier adaptation, certification, and material testing processes. The associated cost is estimated at €50,000. Additionally, BuddyBikes installs renewable energy solutions, such as partial solar energy integration for production facilities. This reduces dependence on external energy sources and increases resilience against energy price volatility. The investment cost is €45,000. To further strengthen resilience, the company implements a closed-loop supply chain system, where production waste is collected, reused, or returned to suppliers. This system requires coordination, logistics adjustments, and digital tracking tools, costing €35,000.", cost: 130000, optEffects: { financial: -18, green: 20, human: 3, resilience: 15, digital: 5 } },
+                B: { name: "Cost-Controlled Sustainability", description: "BuddyBikes focuses on achieving moderate improvements in sustainability while maintaining cost efficiency and stable operations. The company increases its recycling rate to 30% by partially substituting raw materials with recycled inputs. This requires minimal supplier adjustments and costs €20,000. Instead of large energy investments, BuddyBikes improves energy efficiency in existing machinery (e.g., optimizing welding processes and reducing energy waste), costing €15,000. To maintain resilience, the company keeps its current supplier structure but introduces basic sustainability criteria for suppliers to reduce environmental risks. This requires €10,000 in evaluation and compliance processes.", cost: 45000, optEffects: { financial: -6, green: 10, human: 2, resilience: 7, digital: 3 } },
+                C: { name: "Adaptive Eco-Resilience Strategy", description: "BuddyBikes adopts a balanced strategy combining sustainability improvements with adaptive resilience mechanisms. The company increases its recycling rate to 45%, focusing on high-impact components such as steel tubing. The cost associated with this transition is €35,000. Additionally, BuddyBikes invests €30,000 in digital monitoring systems to track energy consumption, emissions, and material efficiency in real time. This allows the company to dynamically adjust production and reduce environmental impact. To enhance resilience, the company diversifies suppliers by selecting partners that meet both sustainability and reliability criteria, ensuring flexibility in case of disruptions. The cost for this integration is €20,000.", cost: 85000, optEffects: { financial: -12, green: 14, human: 4, resilience: 12, digital: 10 } }
+            }
+        }
+    };
+
+    let gameState = {
+        currentRound: 1,
+        cash: 500000,
+        kpis: { financial: 70, human: 55, green: 40, resilience: 50, digital: 35 },
+        history: []
+    };
+
+    let selectedOptionKey = null;
+    let currentBaseVars = {
+        R: 50, E: 50, S: 50, B: 3, T: 50, P: 5, A: 50,
+        C: 50, M: 50, D: 50, SupDiv: 50
+    };
+
+    function getBaseEffects(round, vars) {
+        if (round === 4) {
+            return {
+                financial: -0.03 * vars.R - 0.05 * vars.E - 0.04 * vars.C - 0.025 * vars.M - 0.04 * vars.D - 0.03 * vars.SupDiv,
+                green: 0.12 * vars.R + 0.15 * vars.E + 0.10 * vars.C + 0.08 * vars.M + 0.07 * vars.D + 0.06 * vars.SupDiv,
+                human: 0.01 * vars.D + 0.015 * vars.SupDiv,
+                resilience: 0.02 * vars.R + 0.06 * vars.E + 0.08 * vars.C + 0.04 * vars.M + 0.07 * vars.D + 0.09 * vars.SupDiv,
+                digital: 0.03 * vars.E + 0.02 * vars.M + 0.12 * vars.D
+            };
+        } else {
+            const Bn = (vars.B - 1) / 4;
+            let baseEffects = {
+                financial: -0.02 * vars.R - 0.05 * vars.E - 0.04 * vars.S - 3 * Bn - 0.03 * vars.T - 1.5 * vars.P - 0.06 * vars.A,
+                green: 0.08 * vars.R + 0.12 * vars.E + 0.10 * vars.S - 1 * Bn,
+                human: 0.10 * vars.T + 1.2 * vars.P + 0.02 * vars.A,
+                digital: 0.02 * vars.E + 0.02 * vars.S + 0.025 * vars.T + 0.12 * vars.A
+            };
+
+            if (round === 3) {
+                baseEffects.resilience = 0.015 * vars.R + 0.04 * vars.E + 0.015 * vars.S + 14 * Bn + 0.04 * vars.T + 0.5 * vars.P + 0.05 * vars.A;
+            } else {
+                baseEffects.resilience = 0.015 * vars.R + 0.04 * vars.E + 0.015 * vars.S + 10 * Bn + 0.04 * vars.T + 0.5 * vars.P + 0.05 * vars.A;
+            }
+            return baseEffects;
+        }
+    }
+
+    function calculateBaseCost(vars, round) {
+        if (round === 4) {
+            return Math.floor(vars.R * 180 + vars.E * 220 + vars.C * 200 + vars.M * 150 + vars.D * 250 + vars.SupDiv * 200);
+        } else {
+            return Math.floor(vars.R * 180 + vars.E * 220 + vars.S * 200 + (vars.B - 1) * 15000 + vars.T * 120 + vars.P * 1800 + vars.A * 250);
+        }
+    }
+
+    function calculateNewKPIs(round, optionKey) {
+        const option = roundsData[round].options[optionKey];
+        const baseEffects = getBaseEffects(round, currentBaseVars);
+        const optEffects = option.optEffects;
+
+        return {
+            financial: Math.min(100, Math.max(0, gameState.kpis.financial + optEffects.financial + baseEffects.financial)),
+            green: Math.min(100, Math.max(0, gameState.kpis.green + optEffects.green + baseEffects.green)),
+            human: Math.min(100, Math.max(0, gameState.kpis.human + optEffects.human + baseEffects.human)),
+            resilience: Math.min(100, Math.max(0, gameState.kpis.resilience + optEffects.resilience + baseEffects.resilience)),
+            digital: Math.min(100, Math.max(0, gameState.kpis.digital + optEffects.digital + baseEffects.digital))
+        };
+    }
+
+    function updateKPIs() {
+        const container = document.getElementById('kpiDashboard');
+        if (!container) return;
+        container.innerHTML = `
+            <div class="kpi-card financial"><div>Financial</div><div class="kpi-value">${Math.round(gameState.kpis.financial)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.financial}%; background:#f5a65a"></div></div></div>
+            <div class="kpi-card human"><div>Human Index</div><div class="kpi-value">${Math.round(gameState.kpis.human)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.human}%; background:#5a9eff"></div></div></div>
+            <div class="kpi-card green"><div>Green Index</div><div class="kpi-value">${Math.round(gameState.kpis.green)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.green}%; background:#4cbf7e"></div></div></div>
+            <div class="kpi-card resilience"><div>Resilience</div><div class="kpi-value">${Math.round(gameState.kpis.resilience)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.resilience}%; background:#b77ef0"></div></div></div>
+            <div class="kpi-card digital"><div>Digitalization</div><div class="kpi-value">${Math.round(gameState.kpis.digital)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.digital}%; background:#f06292"></div></div></div>
+        `;
+    }
+
+    function updateSidebar() {
+        document.getElementById('sideRound').innerText = gameState.currentRound;
+        document.getElementById('sideCash').innerText = Math.floor(gameState.cash).toLocaleString();
+    }
+
+    function renderBaseDecisions() {
+        const container = document.getElementById('baseDecisionsContainer');
+        if (!container) return;
+
+        if (gameState.currentRound === 4) {
+            container.innerHTML = `
+                <div class="base-decision-item"><div class="base-decision-label"><span>R - Recycling Rate</span><span id="val_R">${currentBaseVars.R}</span></div><input type="number" class="base-input" id="input_R" min="0" max="100" value="${currentBaseVars.R}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>E - Renewable Energy</span><span id="val_E">${currentBaseVars.E}</span></div><input type="number" class="base-input" id="input_E" min="0" max="100" value="${currentBaseVars.E}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>C - Closed-loop System</span><span id="val_C">${currentBaseVars.C}</span></div><input type="number" class="base-input" id="input_C" min="0" max="100" value="${currentBaseVars.C}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>M - Energy Efficiency</span><span id="val_M">${currentBaseVars.M}</span></div><input type="number" class="base-input" id="input_M" min="0" max="100" value="${currentBaseVars.M}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>D - Digital Monitoring</span><span id="val_D">${currentBaseVars.D}</span></div><input type="number" class="base-input" id="input_D" min="0" max="100" value="${currentBaseVars.D}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>S - Supplier Diversification</span><span id="val_SupDiv">${currentBaseVars.SupDiv}</span></div><input type="number" class="base-input" id="input_SupDiv" min="0" max="100" value="${currentBaseVars.SupDiv}"></div>
+            `;
+
+            const fields = ['R', 'E', 'C', 'M', 'D', 'SupDiv'];
+            fields.forEach(f => {
+                const input = document.getElementById(`input_${f}`);
+                if (input) {
+                    input.oninput = function() {
+                        let val = parseFloat(this.value);
+                        if (isNaN(val)) val = 50;
+                        val = Math.min(100, Math.max(0, val));
+                        currentBaseVars[f] = val;
+                        const span = document.getElementById(`val_${f}`);
+                        if (span) span.innerText = val;
+                    };
+                }
+            });
+        } else {
+            container.innerHTML = `
+                <div class="base-decision-item"><div class="base-decision-label"><span>R - Recycling Rate</span><span id="val_R">${currentBaseVars.R}</span></div><input type="number" class="base-input" id="input_R" min="0" max="100" value="${currentBaseVars.R}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>E - Renewable Energy</span><span id="val_E">${currentBaseVars.E}</span></div><input type="number" class="base-input" id="input_E" min="0" max="100" value="${currentBaseVars.E}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>S - Process Optimization</span><span id="val_S">${currentBaseVars.S}</span></div><input type="number" class="base-input" id="input_S" min="0" max="100" value="${currentBaseVars.S}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>B - Backup Suppliers (1-5)</span><span id="val_B">${currentBaseVars.B}</span></div><input type="number" class="base-input" id="input_B" min="1" max="5" value="${currentBaseVars.B}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>T - Training Hours</span><span id="val_T">${currentBaseVars.T}</span></div><input type="number" class="base-input" id="input_T" min="0" max="100" value="${currentBaseVars.T}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>P - Salary Increase %</span><span id="val_P">${currentBaseVars.P}</span></div><input type="number" class="base-input" id="input_P" min="0" max="10" step="0.5" value="${currentBaseVars.P}"></div>
+                <div class="base-decision-item"><div class="base-decision-label"><span>A - AI Infrastructure</span><span id="val_A">${currentBaseVars.A}</span></div><input type="number" class="base-input" id="input_A" min="0" max="100" value="${currentBaseVars.A}"></div>
+            `;
+
+            const fields = ['R', 'E', 'S', 'B', 'T', 'P', 'A'];
+            fields.forEach(f => {
+                const input = document.getElementById(`input_${f}`);
+                if (input) {
+                    input.oninput = function() {
+                        let val = parseFloat(this.value);
+                        if (isNaN(val)) val = f === 'P' ? 0 : 50;
+                        if (f === 'B') val = Math.min(5, Math.max(1, val));
+                        else if (f === 'P') val = Math.min(10, Math.max(0, val));
+                        else val = Math.min(100, Math.max(0, val));
+                        currentBaseVars[f] = val;
+                        const span = document.getElementById(`val_${f}`);
+                        if (span) span.innerText = val;
+                    };
+                }
+            });
+        }
+    }
+
+    function renderDecisions() {
+        const round = roundsData[gameState.currentRound];
+        document.getElementById('roundTitle').innerText = round.title;
+        document.getElementById('roundStory').innerHTML = round.story;
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        const letters = Object.keys(round.options);
+        letters.forEach(letter => {
+            const opt = round.options[letter];
+            const div = document.createElement('div');
+            div.className = 'option-card';
+            div.setAttribute('data-opt', letter);
+            div.innerHTML = `
+                <div class="option-letter">${letter}</div>
+                <div class="option-text">${opt.description}</div>
+            `;
+            div.onclick = function() {
+                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedOptionKey = letter;
+                document.getElementById('confirmBtn').disabled = false;
+            };
+            container.appendChild(div);
+        });
+
+        renderBaseDecisions();
+        document.getElementById('confirmBtn').disabled = true;
+        selectedOptionKey = null;
+    }
+
+    function updateHistory() {
+        const container = document.getElementById('historyList');
+        if (!container) return;
+
+        if (gameState.history.length === 0) {
+            container.innerHTML = '<div class="history-item">No decisions made yet.</div>';
+            return;
+        }
+
+        container.innerHTML = gameState.history.map(h => `
+            <div class="history-item">
+                <strong>Round ${h.round}</strong><br>
+                Strategy: ${h.optionName}<br>
+                Strategic Cost: €${h.strategicCost.toLocaleString()} | Base Decisions: €${h.baseCost.toLocaleString()}
+            </div>
+        `).join('');
+    }
+
+    function showSection(sectionId) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(sectionId + 'Section').classList.add('active-section');
+
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+        if (sectionId === 'kpis') updateKPIs();
+        if (sectionId === 'results') updateHistory();
+    }
+
+    function submitDecision() {
+        if (!selectedOptionKey) return;
+
+        const round = roundsData[gameState.currentRound];
+        const option = round.options[selectedOptionKey];
+
+        const newKPIs = calculateNewKPIs(gameState.currentRound, selectedOptionKey);
+        const baseCost = calculateBaseCost(currentBaseVars, gameState.currentRound);
+
+        gameState.cash -= option.cost;
+        gameState.cash -= baseCost;
+        gameState.kpis = newKPIs;
+
+        gameState.history.push({
+            round: gameState.currentRound,
+            optionName: option.name,
+            strategicCost: option.cost,
+            baseCost: baseCost
+        });
+
+        gameState.currentRound++;
+
+        updateKPIs();
+        updateSidebar();
+        updateHistory();
+
+        if (gameState.currentRound > 4) {
+            document.getElementById('gameScreen').classList.remove('active');
+            const avgScore = (gameState.kpis.human + gameState.kpis.green + gameState.kpis.resilience) / 3;
+            const verdict = avgScore >= 70 ? "🎉 Industry 5.0 Achieved! Excellent transformation!" : (avgScore >= 55 ? "📈 On the Right Path. Good progress!" : "⚠️ Room for Growth. Needs stronger commitment.");
+
+            document.getElementById('summaryContent').innerHTML = `
+                <div class="kpi-grid"><div class="kpi-card financial"><div>Financial</div><div class="kpi-value">${Math.round(gameState.kpis.financial)}</div></div><div class="kpi-card human"><div>Human</div><div class="kpi-value">${Math.round(gameState.kpis.human)}</div></div><div class="kpi-card green"><div>Green</div><div class="kpi-value">${Math.round(gameState.kpis.green)}</div></div><div class="kpi-card resilience"><div>Resilience</div><div class="kpi-value">${Math.round(gameState.kpis.resilience)}</div></div><div class="kpi-card digital"><div>Digital</div><div class="kpi-value">${Math.round(gameState.kpis.digital)}</div></div></div>
+                <p style="margin-top:20px"><strong>${verdict}</strong></p>
+                <p>Final Cash: €${Math.floor(gameState.cash).toLocaleString()}</p>
+            `;
+            document.getElementById('summaryScreen').classList.add('active');
+        } else {
+            renderDecisions();
+            showSection('decisions');
+        }
+    }
+
+    function resetGame() {
+        gameState = {
+            currentRound: 1,
+            cash: 500000,
+            kpis: { financial: 70, human: 55, green: 40, resilience: 50, digital: 35 },
+            history: []
+        };
+        selectedOptionKey = null;
+        currentBaseVars = { R: 50, E: 50, S: 50, B: 3, T: 50, P: 5, A: 50, C: 50, M: 50, D: 50, SupDiv: 50 };
+        updateKPIs();
+        updateSidebar();
+        renderDecisions();
+        updateHistory();
+    }
+
+    // Initialize all event listeners
+    document.getElementById('startMissionBtn').onclick = function() {
+        document.getElementById('landingScreen').classList.remove('active');
+        document.getElementById('missionScreen').classList.add('active');
+    };
+
+    document.getElementById('playNowBtn').onclick = function() {
+        document.getElementById('missionScreen').classList.remove('active');
+        document.getElementById('gameScreen').classList.add('active');
+        resetGame();
+        showSection('decisions');
+    };
+
+    document.getElementById('restartBtn').onclick = function() {
+        document.getElementById('summaryScreen').classList.remove('active');
+        document.getElementById('landingScreen').classList.add('active');
+    };
+
+    document.getElementById('confirmBtn').onclick = submitDecision;
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.onclick = function() {
+            showSection(this.getAttribute('data-section'));
+        };
+    });
+
+    // Initial render
+    resetGame();
+</script>
 </body>
 </html>
