@@ -1,6 +1,6 @@
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "industry5.0.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "industry5.settings")
 
 from django.core.wsgi import get_wsgi_application
 
