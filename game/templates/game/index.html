@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,337 +6,75 @@
     <title>BuddyBikes | Industry 5.0 Transition Simulation</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a1a2f;
-            color: #eef2ff;
-            line-height: 1.5;
-            min-height: 100vh;
-        }
-
-        .screen {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-        .screen.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            font-weight: 600;
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: 0.2s;
-            text-align: center;
-            background: #2c6e9e;
-            color: white;
-            font-size: 16px;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .landing-card {
-            background: rgba(18, 30, 46, 0.95);
-            border-radius: 32px;
-            padding: 48px 32px;
-            text-align: center;
-            max-width: 800px;
-            margin: 60px auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .company-name {
-            font-size: 56px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #7ab3c8 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 12px;
-        }
-
-        .industry-badge {
-            background: #111c2a;
-            padding: 12px 20px;
-            border-radius: 12px;
-            display: inline-block;
-            margin: 10px;
-            border-bottom: 3px solid #2c6e9e;
-        }
-
-        .dashboard-layout {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 780px) {
-            .dashboard-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .sidebar {
-            background: #0f1e2c;
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid #253c4e;
-            height: fit-content;
-        }
-
-        .nav-item {
-            padding: 12px 16px;
-            margin: 6px 0;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: 0.2s;
-        }
-        .nav-item:hover {
-            background: #1a3346;
-        }
-        .nav-item.active {
-            background: #2c6e9e;
-            color: white;
-        }
-
-        .main-panel {
-            background: #0f1e2c;
-            border-radius: 20px;
-            padding: 28px;
-            border: 1px solid #253c4e;
-            min-height: 65vh;
-        }
-
-        .content-section {
-            display: none;
-        }
-        .content-section.active-section {
-            display: block;
-        }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .kpi-card {
-            background: #0a1822;
-            border-radius: 16px;
-            padding: 18px;
-            text-align: center;
-            border-left: 4px solid;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a1a2f; color: #eef2ff; line-height: 1.5; min-height: 100vh; }
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        .btn { display: inline-block; padding: 12px 28px; font-weight: 600; border: none; border-radius: 40px; cursor: pointer; transition: 0.2s; text-align: center; background: #2c6e9e; color: white; font-size: 16px; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .landing-card { background: rgba(18,30,46,0.95); border-radius: 32px; padding: 48px 32px; text-align: center; max-width: 800px; margin: 60px auto; border: 1px solid rgba(255,255,255,0.1); }
+        .company-name { font-size: 56px; font-weight: 800; background: linear-gradient(135deg, #fff 0%, #7ab3c8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 12px; }
+        .industry-badge { background: #111c2a; padding: 12px 20px; border-radius: 12px; display: inline-block; margin: 10px; border-bottom: 3px solid #2c6e9e; }
+        .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; }
+        @media (max-width: 780px) { .dashboard-layout { grid-template-columns: 1fr; } }
+        .sidebar { background: #0f1e2c; border-radius: 20px; padding: 24px; border: 1px solid #253c4e; height: fit-content; }
+        .nav-item { padding: 12px 16px; margin: 6px 0; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; }
+        .nav-item:hover { background: #1a3346; }
+        .nav-item.active { background: #2c6e9e; color: white; }
+        .main-panel { background: #0f1e2c; border-radius: 20px; padding: 28px; border: 1px solid #253c4e; min-height: 65vh; }
+        .content-section { display: none; }
+        .content-section.active-section { display: block; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .kpi-card { background: #0a1822; border-radius: 16px; padding: 18px; text-align: center; border-left: 4px solid; }
         .kpi-card.financial { border-left-color: #f5a65a; }
         .kpi-card.human { border-left-color: #5a9eff; }
         .kpi-card.green { border-left-color: #4cbf7e; }
         .kpi-card.resilience { border-left-color: #b77ef0; }
         .kpi-card.digital { border-left-color: #f06292; }
-        .kpi-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 8px 0;
-        }
-        .progress-track {
-            height: 6px;
-            background: #1e3345;
-            border-radius: 3px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-
-        .chart-container {
-            background: #0a1822;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 28px;
-            border: 1px solid #2c4458;
-        }
-        .chart-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #7ab3c8;
-            text-align: center;
-        }
-        canvas {
-            max-height: 300px;
-            width: 100%;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            margin-top: 20px;
-            align-items: start;
-        }
-        .option-card {
-            background: #0a1822;
-            border: 1px solid #2c4458;
-            border-radius: 20px;
-            padding: 24px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-        .option-card:hover {
-            border-color: #4c9f8c;
-            transform: translateY(-3px);
-        }
-        .option-card.selected {
-            border-color: #4c9f8c;
-            background: #102432;
-        }
-        .option-letter {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #2c6e9e;
-            border-radius: 12px;
-            text-align: center;
-            line-height: 40px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            flex-shrink: 0;
-            font-size: 20px;
-        }
-        .option-text {
-            color: #bcd0df;
-            line-height: 1.6;
-            font-size: 0.9rem;
-            flex-grow: 1;
-            margin-bottom: 0;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 8px;
-        }
-        .option-text::-webkit-scrollbar {
-            width: 6px;
-        }
-        .option-text::-webkit-scrollbar-track {
-            background: #1e3345;
-            border-radius: 3px;
-        }
-        .option-text::-webkit-scrollbar-thumb {
-            background: #4c9f8c;
-            border-radius: 3px;
-        }
-
-        .base-decisions-panel {
-            background: #0a1822;
-            border-radius: 20px;
-            margin-top: 28px;
-            padding: 20px;
-            border: 1px solid #2c6e9e;
-        }
-        .base-decisions-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #7ab3c8;
-            border-left: 3px solid #4c9f8c;
-            padding-left: 12px;
-        }
-        .base-decision-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 18px;
-            margin-top: 8px;
-        }
-        .base-decision-item {
-            background: #05121c;
-            border-radius: 14px;
-            padding: 12px 16px;
-        }
-        .base-decision-label {
-            font-weight: 500;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #b0c4de;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .base-decision-label span:first-child {
-            font-weight: 600;
-        }
-        .base-decision-label span:last-child {
-            color: #4cbf7e;
-            font-weight: 600;
-        }
-        input.base-input {
-            width: 100%;
-            padding: 10px 12px;
-            background: #0f1e2c;
-            border: 1px solid #2c6e9e;
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            font-weight: 500;
-            text-align: center;
-        }
-        input.base-input:focus {
-            outline: none;
-            border-color: #4cbf7e;
-        }
-
-        .history-item {
-            background: #0a1822;
-            padding: 14px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            border-left: 3px solid #4c9f8c;
-        }
-
-        .round-story {
-            background: #0a1822;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            line-height: 1.6;
-            color: #bcd0df;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .round-info {
-            margin-top: 28px;
-            padding-top: 16px;
-            border-top: 1px solid #2a4458;
-        }
+        .kpi-value { font-size: 32px; font-weight: 700; margin: 8px 0; }
+        .progress-track { height: 6px; background: #1e3345; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .progress-fill { height: 100%; transition: width 0.5s ease; }
+        .chart-container { background: #0a1822; border-radius: 20px; padding: 20px; margin-bottom: 28px; border: 1px solid #2c4458; }
+        .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: #7ab3c8; text-align: center; }
+        canvas { max-height: 300px; width: 100%; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-top: 20px; align-items: start; }
+        .option-card { background: #0a1822; border: 1px solid #2c4458; border-radius: 20px; padding: 24px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
+        .option-card:hover { border-color: #4c9f8c; transform: translateY(-3px); }
+        .option-card.selected { border-color: #4c9f8c; background: #102432; }
+        .option-letter { display: inline-block; width: 40px; height: 40px; background: #2c6e9e; border-radius: 12px; text-align: center; line-height: 40px; font-weight: bold; margin-bottom: 16px; flex-shrink: 0; font-size: 20px; }
+        .option-title { font-size: 1rem; font-weight: 700; color: #eef2ff; margin-bottom: 10px; }
+        .option-text { color: #bcd0df; line-height: 1.6; font-size: 0.9rem; flex-grow: 1; margin-bottom: 0; max-height: 320px; overflow-y: auto; padding-right: 8px; }
+        .option-text::-webkit-scrollbar { width: 6px; }
+        .option-text::-webkit-scrollbar-track { background: #1e3345; border-radius: 3px; }
+        .option-text::-webkit-scrollbar-thumb { background: #4c9f8c; border-radius: 3px; }
+        .option-cost { margin-top: 14px; padding-top: 12px; border-top: 1px solid #2c4458; font-size: 0.85rem; color: #f5a65a; font-weight: 600; }
+        .base-decisions-panel { background: #0a1822; border-radius: 20px; margin-top: 28px; padding: 20px; border: 1px solid #2c6e9e; }
+        .base-decisions-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; color: #7ab3c8; border-left: 3px solid #4c9f8c; padding-left: 12px; }
+        .base-decision-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 8px; }
+        .base-decision-item { background: #05121c; border-radius: 14px; padding: 12px 16px; }
+        .base-decision-label { font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #b0c4de; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .base-decision-label span:first-child { font-weight: 600; }
+        .base-decision-label span:last-child { color: #4cbf7e; font-weight: 600; }
+        input.base-input { width: 100%; padding: 10px 12px; background: #0f1e2c; border: 1px solid #2c6e9e; border-radius: 12px; color: white; font-size: 1rem; font-weight: 500; text-align: center; }
+        input.base-input:focus { outline: none; border-color: #4cbf7e; }
+        .info-icon { cursor: pointer; font-size: 1rem; opacity: 0.7; transition: opacity 0.2s; user-select: none; }
+        .info-icon:hover { opacity: 1; }
+        .history-item { background: #0a1822; padding: 14px; margin-bottom: 10px; border-radius: 12px; border-left: 3px solid #4c9f8c; }
+        .round-context { background: #0a1822; padding: 18px 22px; border-radius: 16px; margin-bottom: 24px; border-left: 3px solid #2c6e9e; }
+        .round-context p { color: #bcd0df; font-size: 0.95rem; line-height: 1.65; }
+        .round-story-full { background: #0a1822; padding: 24px; border-radius: 16px; line-height: 1.75; color: #bcd0df; font-size: 0.95rem; }
+        .round-story-full h3 { color: #7ab3c8; font-size: 1rem; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .round-story-full p { margin-bottom: 16px; }
+        .round-info { margin-top: 28px; padding-top: 16px; border-top: 1px solid #2a4458; }
+        .info-icon { display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1px solid #4c7a9a;color:#7ab3c8;font-size:11px;cursor:pointer;flex-shrink:0;transition:0.2s;font-style:normal;font-weight:700; }
+        .info-icon:hover { background:#1a3346;border-color:#7ab3c8;color:#eef2ff; }
+        .info-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;display:flex;align-items:center;justify-content:center; }
+        .info-popup { background:#0f1e2c;border:1px solid #2c6e9e;border-radius:20px;padding:28px;max-width:480px;width:90%; }
+        .round-title-heading { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+        .round-subtitle { color: #7ab3c8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 18px; }
     </style>
 </head>
 <body>
@@ -363,18 +100,16 @@
     <div class="container" style="max-width: 800px;">
         <div class="landing-card" style="text-align: left;">
             <h2 style="margin-bottom: 20px;">The BuddyBikes Story</h2>
-            <p style="margin: 16px 0; line-height: 1.6;">For 10 years, BuddyBikes has been a master of Industry 4.0. We used high-speed automation and data to build thousands of frames. We were fast, we were cheap, and we were profitable.</p>
-            <div style="background: #0a1822; padding: 20px; border-radius: 16px; margin: 20px 0;">
-                <strong>But the world has changed:</strong>
-                <ul style="margin-top: 12px; margin-left: 20px;">
-                    <li style="margin: 8px 0;">The Workers: Our team is exhausted. High-speed robots are efficient, but the human element—creativity and well-being—has been ignored.</li>
-                    <li style="margin: 8px 0;">The Planet: Our carbon footprint is too high, and modern customers are starting to walk away from dirty manufacturing.</li>
-                    <li style="margin: 8px 0;">The Market: One supply chain break shuts us down for weeks because we are too rigid.</li>
-                </ul>
+            <p style="margin: 16px 0; line-height: 1.75; color: #bcd0df;">For over a decade, BuddyBikes built its reputation on one thing: efficiency. Since the early days of Industry 4.0 adoption, we invested heavily in automation, data systems, and lean production. The results spoke for themselves, thousands of BodyBike frames shipped on time, costs kept low, margins held strong.</p>
+            <div style="background: #0a1822; padding: 24px; border-radius: 16px; margin: 20px 0;">
+                <p style="color: #eef2ff; font-weight: 600; margin-bottom: 14px;">But something has shifted and it did not happen overnight.</p>
+                <p style="color: #bcd0df; line-height: 1.75; margin-bottom: 14px;">Our workforce kept the machines running, but at a cost we stopped measuring. Engagement is down, experienced people are walking out the door, and the ones who stay are doing the minimum because no one asked for more. The human element, the creativity, the judgment, the institutional knowledge, has been quietly draining away.</p>
+                <p style="color: #bcd0df; line-height: 1.75; margin-bottom: 14px;">At the same time, our clients are changing. Sustainability is no longer a nice-to-have, it is a procurement requirement. Our carbon footprint per unit is being scrutinised, and two of our largest retail partners have already raised concerns. We are not ready to answer them credibly.</p>
+                <p style="color: #bcd0df; line-height: 1.75; margin: 0;">And then there is the fragility we discovered the hard way. One supplier disruption, one unexpected event in the supply chain, and production stopped for five days. A system built entirely around efficiency has no tolerance for the unexpected.</p>
             </div>
-            <div style="background: #1d3a4e; padding: 20px; border-radius: 16px; margin: 20px 0;">
-                <strong>Your Mission</strong>
-                <p style="margin-top: 10px;">Lead our Industry 5.0 Transition. This is a shift in mindset: Human-Centric, Sustainable, and Resilient.</p>
+            <div style="background: #1d3a4e; padding: 24px; border-radius: 16px; margin: 20px 0;">
+                <p style="color: #eef2ff; font-weight: 600; margin-bottom: 10px;">Your Mission</p>
+                <p style="color: #bcd0df; line-height: 1.75; margin: 0;">Lead BuddyBikes through its Industry 5.0 transition. This is not an upgrade, it is a fundamental shift in how we think about manufacturing. The goal is an operation that is human-centric, environmentally responsible, operationally resilient, and digitally intelligent. These pillars do not compete with each other. Done right, they reinforce each other and together they define what a sustainable, future-ready business actually looks like.</p>
             </div>
             <button class="btn" id="playNowBtn" style="width: 100%; margin-top: 20px;">Begin Round 1</button>
         </div>
@@ -390,40 +125,40 @@
                 <div class="nav-item active" data-section="about">About Company</div>
                 <div class="nav-item" data-section="kpis">KPIs</div>
                 <div class="nav-item" data-section="decisions">Strategic Decisions</div>
+                <div class="nav-item" data-section="roundstory">Round Story</div>
                 <div class="nav-item" data-section="results">Results History</div>
                 <div class="round-info">
                     <div>Round: <strong id="sideRound">1</strong>/4</div>
                 </div>
             </div>
-
             <div class="main-panel">
                 <div id="aboutSection" class="content-section active-section">
                     <h2>BuddyBikes · BodyBike Division</h2>
                     <p style="margin: 16px 0; color: #bcd0df;">BuddyBikes is a manufacturing company producing the structural frame of an electric bicycle called 'BodyBike'. The company is currently transitioning from Industry 4.0 to Industry 5.0, focusing on human-centric innovation, resilience, sustainability, and advanced digitalization.</p>
                 </div>
-
                 <div id="kpisSection" class="content-section">
                     <h2>Current Performance Metrics</h2>
                     <div class="kpi-grid" id="kpiDashboard"></div>
                     <div class="chart-container">
-                        <div class="chart-title"> KPI Progression Over Rounds</div>
+                        <div class="chart-title">KPI Progression Over Rounds</div>
                         <canvas id="kpiChart"></canvas>
                     </div>
                 </div>
-
                 <div id="decisionsSection" class="content-section">
-                    <h2 id="roundTitle"></h2>
-                    <div class="round-story" id="roundStory"></div>
+                    <div class="round-subtitle" id="roundSubtitle"></div>
+                    <div class="round-title-heading" id="roundTitle"></div>
+                    <div class="round-context" id="roundContext"></div>
                     <div id="optionsContainer" class="options-grid"></div>
-
                     <div class="base-decisions-panel">
-                        <div class="base-decisions-title">⚙️ Base Decisions (Set values 0-100)</div>
+                        <div class="base-decisions-title">⚙️ Base Decisions (Set values 0–100)</div>
                         <div class="base-decision-group" id="baseDecisionsContainer"></div>
                     </div>
-
                     <button id="confirmBtn" class="btn" style="width: 100%; margin-top: 24px;" disabled>Confirm Strategy & Base Decisions</button>
                 </div>
-
+                <div id="roundstorySection" class="content-section">
+                    <h2 style="margin-bottom: 20px;">Round Background</h2>
+                    <div class="round-story-full" id="roundStoryFull"></div>
+                </div>
                 <div id="resultsSection" class="content-section">
                     <h2>Decision Outcomes</h2>
                     <div id="historyList"></div>
@@ -435,55 +170,259 @@
 
 <!-- SUMMARY SCREEN -->
 <div id="summaryScreen" class="screen">
-    <div class="container" style="max-width: 800px;">
-        <div class="landing-card">
-            <h2>Transition Complete</h2>
+    <div class="container" style="max-width: 900px;">
+        <div class="landing-card" style="text-align:left;">
             <div id="summaryContent"></div>
-            <button class="btn" id="restartBtn" style="width: 100%; margin-top: 24px;">Play Again</button>
+            <div id="summaryChartContainer" style="display:none; margin-top:28px;">
+                <div class="chart-container" style="margin-bottom:0;">
+                    <div class="chart-title">KPI Progression — All 4 Rounds</div>
+                    <canvas id="summaryKpiChart"></canvas>
+                </div>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:24px;flex-wrap:wrap;">
+                <button class="btn" id="toggleChartBtn" style="flex:1;min-width:160px;background:#1d3a4e;border:1px solid #2c6e9e;">View KPI Chart</button>
+                <button class="btn" id="restartBtn" style="flex:1;min-width:160px;">Play Again</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Round data with full descriptions
     const roundsData = {
         1: {
-            title: "Round 1: Human-Centric Foundation",
-            story: "BuddyBikes is a manufacturing company producing the structural frame of an electric bicycle called 'BodyBike'. The company is currently transitioning from Industry 4.0 to Industry 5.0, focusing on human-centric innovation, resilience, sustainability, and advanced digitalization.",
+            title: "Foundation",
+            subtitle: "Round 1",
+            context: "Employee satisfaction scores have declined for the third consecutive quarter. Turnover among skilled production staff is trending upward, and cross-department collaboration metrics are below industry benchmarks. Leadership has identified workforce structure and capability as the primary constraint on the company's Industry 5.0 readiness. Two investment proposals are under review.",
+            story: `<h3>Situation Overview</h3>
+<p>BuddyBikes enters its transition period as a financially stable but operationally rigid organisation. A decade of Industry 4.0 optimisation has produced consistent throughput and lean cost structures, but the human dimension of the operation has been systematically deprioritised. The results are now visible in the data: declining engagement, rising attrition among experienced staff, and a workforce that is increasingly disengaged from the process improvements it is nominally part of.</p>
+<p>The company's reliance on automation has created efficiency at the expense of adaptability. Individual workers operate within narrowly defined task boundaries, limiting the organisation's capacity to respond to production variability or cross-functional challenges. Knowledge transfer between departments is weak, and the feedback loops between the shop floor and management are slow and incomplete.</p>
+<p>Industry 5.0 frameworks position human-machine collaboration not human replacement as the core operating principle. For BuddyBikes, this requires a strategic reassessment of how the workforce is structured, developed, and supported. The decision made in this round will shape the organisation's capacity to absorb and benefit from every subsequent investment in the transition.</p>
+<p>Two directions are on the table. One prioritises workforce capability and organisational culture as the foundation for long-term performance. The other prioritises technology integration to drive throughput and reduce process variance. Both carry meaningful trade-offs. Neither is without risk.</p>`,
             baseProduction: 1200,
             options: {
-                A: { name: "Workforce Development Strategy", description: "BuddyBikes focuses mainly on strengthening its workforce and improving collaboration on the shop floor. The company launches an intensive training program for 60 production workers, costing €1,000 per worker for technical skills, safety, and flexible manufacturing methods (€60,000 total). The factory layout is redesigned to support team-based work and adaptable production cells, requiring €25,000 in workstation upgrades and ergonomic improvements. A small number of supportive digital tools and assistive devices are introduced for €15,000, but large-scale automation is not prioritized.", cost: 100000, productionEffect: 0.05, optEffects: { financial: -6, green: 2, human: 12, resilience: 8, digital: 4 } },
-                B: { name: "Collaborative Robotics Strategy", description: "BuddyBikes invests heavily in collaborative robotics to assist with tasks such as welding and frame assembly. The company purchases 10 collaborative robots (co-bots) at €45,000 per machine, resulting in an equipment investment of €450,000. These robots work alongside operators who supervise and guide the production process. To enable workers to operate and monitor the new systems, 20 operators receive specialized training at €1,200 per person (€24,000 total).", cost: 450000, productionEffect: 0.25, optEffects: { financial: -12, green: 1, human: 4, resilience: 5, digital: 14 } }
+                A: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Address the root cause of declining performance by investing directly in workforce skills, workplace structure, and human-centred process design. The premise is that operational efficiency gains from technology are limited without a workforce equipped and motivated to work within them.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Skills development for 60 production workers, covering technical cross-training, safety protocols, and flexible manufacturing methods (€60,000)</li>
+<li style="margin-bottom:6px">Factory layout reconfiguration to support team-based production cells and collaborative workflows(€25,000)</li>
+<li style="margin-bottom:6px">Introductory digital assistance tools to support, not replace, manual processes(€15,000)</li>
+</ul>
+
+<strong>Key considerations:</strong> This approach prioritises organisational capability over output volume. Returns are expected to materialise over multiple periods through reduced attrition, improved process adherence, and greater workforce adaptability. Short-term production metrics are unlikely to show significant uplift. The approach carries low capital risk but requires sustained management attention to realise its potential.`,
+                    cost: 100000,
+                    productionEffect: 0.05,
+                    optEffects: { financial: 1, green: 2, human: 12, resilience: 8, digital: 4 }
+                },
+                B: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Address throughput variance and process inconsistency by deploying collaborative robotics across high-precision production tasks. The premise is that human-machine co-operation, properly implemented, increases output capacity while maintaining operator involvement in quality control.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Acquisition of 10 collaborative robots (co-bots) at €45,000 per unit, deployed across welding and frame assembly stations(€450,000)</li>
+<li style="margin-bottom:6px">Specialist training for 20 operators (€1,200 per person) in co-bot supervision, system monitoring, and exception handling(€24,000)</li>
+</ul>
+
+<strong>Key considerations:</strong> This is a capital-intensive commitment with a concentrated risk profile. The investment is front-loaded, with expected returns tied to throughput gains and long term cost-per-unit reduction. Workforce impact will depend significantly on how the transition is managed. Operators who are repositioned effectively may see role enhancement; those who are not risk disengagement. Technology integration at this scale also introduces new maintenance dependencies and system vulnerability considerations.`,
+                    cost: 450000,
+                    productionEffect: 0.25,
+                    optEffects: { financial: 3, green: 1, human: 4, resilience: 5, digital: 14 }
+                }
             }
         },
         2: {
-            title: "Round 2: Green & Digital Integration",
-            story: "As BuddyBikes continues its transformation toward Industry 5.0, the management team meets to review the progress made during the first phase of the transition.",
+            title: "The External Pressure",
+            subtitle: "Round 2",
+            context: "Energy costs have increased 18% year-on-year. Two key retail partners have issued formal sustainability questionnaires, with carbon intensity per unit and environmental roadmap documentation among the required disclosures. Regulatory pressure at the sector level is also increasing. The board has requested a defined sustainability strategy ahead of the next reporting cycle. Three proposals are under evaluation.",
+            story: `<h3>Situation Overview</h3>
+<p>BuddyBikes faces a convergence of external pressures that collectively elevate sustainability from a reputational consideration to a strategic and financial one. Energy expenditure has increased materially, driven by rising utility costs and an operational footprint that has not been meaningfully optimised since the last major equipment cycle. At current consumption rates, the trend is projected to continue.</p>
+<p>More significantly, the company's commercial relationships are beginning to reflect market wide shifts in procurement standards. Key retail partners are moving toward supplier sustainability requirements as part of their own ESG reporting obligations. The questionnaires received this quarter are not isolated, they are indicative of a procurement landscape that will increasingly condition contracts on verifiable environmental performance.</p>
+<p>Internally, the company lacks the measurement infrastructure to respond credibly to these requests. Emissions data is incomplete, waste tracking is manual, and there is no coherent framework linking operational decisions to environmental outcomes. This gap creates both reputational and commercial exposure.</p>
+<p>The three proposals before leadership represent distinct approaches to closing that gap — through workforce-led behavioural change, capital-intensive infrastructure investment, or a balanced allocation across both dimensions. Each carries different implications for cost, implementation complexity, and the pace at which measurable outcomes can be demonstrated to external stakeholders.</p>`,
             baseProduction: 1300,
             options: {
-                A: { name: "Workforce-Driven Sustainability", description: "BuddyBikes prioritizes workforce involvement in improving factory operations. The company launches a green skills training program for 60 production workers (€48,000). Internal improvement program (€20,000). Digital energy-monitoring dashboards (€25,000). Ergonomic improvements (€30,000).", cost: 123000, productionEffect: 0.08, optEffects: { financial: -5, green: 12, human: 10, resilience: 9, digital: 5 } },
-                B: { name: "Technology-Driven Sustainability", description: "Solar panels (€120,000), smart energy management system (€35,000), battery storage (€55,000), technician training (€15,000).", cost: 225000, productionEffect: 0.18, optEffects: { financial: -10, green: 15, human: 5, resilience: 10, digital: 9 } },
-                C: { name: "Balanced Sustainability Strategy", description: "Energy-efficient equipment (€90,000), worker training (€36,000), waste-sorting system (€18,000), digital platform (€16,000).", cost: 160000, productionEffect: 0.12, optEffects: { financial: -7, green: 13, human: 8, resilience: 10, digital: 7 } }
+                A: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Build environmental performance capacity from within the existing workforce, on the basis that operational staff are best positioned to identify and act on inefficiencies at the process level. This approach prioritises behavioural and organisational change over infrastructure investment.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Green skills training programme for 60 production workers, covering waste reduction, energy awareness, and sustainable manufacturing practices(€48,000)</li>
+<li style="margin-bottom:6px">Internal continuous improvement programme to formalise and track worker-identified efficiency gains(€20,000)</li>
+<li style="margin-bottom:6px">Digital energy monitoring dashboards providing real-time consumption visibility at department level(€25,000)</li>
+<li style="margin-bottom:6px">Ergonomic and workstation upgrades to reduce physical fatigue and associated error rates(€30,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This programme generates relatively modest headline environmental metrics in the near term but builds the internal capability to sustain and compound improvements over time. The approach is low in capital risk and does not create significant new infrastructure dependencies. Demonstrating credible progress to external stakeholders may require supplementary reporting given the incremental nature of the expected gains.`,
+                    cost: 123000,
+                    productionEffect: 0.08,
+                    optEffects: { financial: 1, green: 12, human: 10, resilience: 9, digital: 5 }
+                },
+                B: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Address energy cost and carbon exposure through direct infrastructure investment, eliminating grid dependency for a significant portion of operational consumption. This approach treats energy as a long-term liability to be structurally reduced rather than managed through behaviour change.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Rooftop solar panel installation across the primary production facility (€120,000)</li>
+<li style="margin-bottom:6px">Smart energy management system for real-time load optimisation and consumption forecasting (€35,000)</li>
+<li style="margin-bottom:6px">On-site battery storage to enable peak-rate avoidance and buffer against grid fluctuations (€55,000)</li>
+<li style="margin-bottom:6px">Technical training for maintenance personnel on system operation and fault management (€15,000)</li>
+</ul>
+
+<strong>Key considerations:</strong> This is the highest capital option in this round. The investment produces quantifiable, externally reportable environmental metrics from the point of implementation and carries a long-term cost reduction case that improves as energy prices continue to rise. Payback period is sensitive to production volume, energy price trajectory, and regulatory incentive structures. Infrastructure of this scale also introduces new maintenance obligations and asset management requirements.`,
+                    cost: 225000,
+                    productionEffect: 0.18,
+                    optEffects: { financial: 2, green: 15, human: 5, resilience: 10, digital: 9 }
+                },
+                C: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Distribute investment across equipment efficiency, workforce capability, waste reduction, and digital tracking, addressing multiple environmental levers simultaneously without over-concentrating capital in any single area.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Replacement of highest-consumption legacy equipment with energy-efficient alternatives (€90,000)</li>
+<li style="margin-bottom:6px">Environmental training across production and operations departments (€36,000)</li>
+<li style="margin-bottom:6px">Waste-sorting and materials recovery infrastructure (€18,000)</li>
+<li style="margin-bottom:6px">Cross-departmental sustainability performance platform for shared reporting and target tracking (€16,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This option produces measurable improvement across several sustainability dimensions without requiring the operational disruption or capital concentration of the infrastructure-led approach. Trade-offs include a less pronounced step-change in any single metric, which may limit the credibility of external sustainability communications in the short term. Longer term, the breadth of improvements may prove more durable and easier to build upon.`,
+                    cost: 160000,
+                    productionEffect: 0.12,
+                    optEffects: { financial: 2, green: 13, human: 8, resilience: 10, digital: 7 }
+                }
             }
         },
         3: {
-            title: "Round 3: Resilience and Financial Stability",
-            story: "Management evaluates alternative strategies to strengthen system stability and manage financial resources.",
+            title: "When the System Breaks",
+            subtitle: "Round 3",
+            context: "A supplier disruption in the previous period resulted in five days of unplanned production downtime and a three week recovery period. Post incident analysis identified single source dependency and reactive maintenance protocols as primary contributing factors. Client satisfaction has been impacted. Leadership has commissioned a resilience review. Three strategic responses are under consideration.",
+            story: `<h3>Situation Overview</h3>
+<p>The supply chain disruption experienced last period has exposed a structural vulnerability in BuddyBikes' operating model. The company's supply chain was designed around a lean, cost optimised framework that minimised inventory carrying costs and consolidated sourcing to maximise purchasing leverage. Under stable conditions, this model performed as intended. Under disruption, it had no tolerance.</p>
+<p>The incident has triggered a broader internal review of operational risk. The findings indicate that the issue is not isolated to a single supplier relationship, it reflects a systemic under investment in redundancy across the supply chain, maintenance infrastructure, and inventory buffers. The factory is efficient when conditions are favourable; it is fragile when they are not.</p>
+<p>From a commercial perspective, the consequences extend beyond the direct costs of downtime. Client confidence has been affected, and the company's ability to make credible delivery commitments has been questioned. In a market where reliability is increasingly a differentiator, reputational damage of this kind compounds over time.</p>
+<p>The three proposals before leadership represent different assessments of the disruption's significance and different tolerances for the cost of resilience. The central question is not whether to invest in stability, but how much redundancy is appropriate and at what cost to operational efficiency and financial flexibility.</p>`,
             baseProduction: 1400,
             options: {
-                A: { name: "High Resilience Strategy", description: "Add 2 backup suppliers (€35,000), strengthen maintenance (€30,000), increase inventory to 4 weeks (€40,000).", cost: 105000, productionEffect: 0.02, optEffects: { financial: -8, green: 4, human: 6, resilience: 15, digital: 3 } },
-                B: { name: "Cost Efficiency Strategy", description: "Maintain current suppliers, continue regular maintenance (€20,000), reduce inventory to 2 weeks (€25,000).", cost: 45000, productionEffect: -0.05, optEffects: { financial: -3, green: 2, human: 3, resilience: 6, digital: 2 } },
-                C: { name: "Balanced Stability Strategy", description: "Add 1 backup supplier (€20,000), predictive maintenance sensors (€25,000), 3-week inventory (€30,000).", cost: 75000, productionEffect: 0, optEffects: { financial: -5, green: 3, human: 5, resilience: 10, digital: 4 } }
+                A: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Treat the recent disruption as evidence of a systemic resilience deficit and respond with structural changes across sourcing, maintenance, and inventory management. This approach accepts higher carrying costs in exchange for significantly reduced exposure to future disruptions.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Contracting and onboarding of two additional qualified backup suppliers across critical component categories (€35,000)</li>
+<li style="margin-bottom:6px">Enhanced maintenance programme with strengthened preventive protocols and reduced reactive maintenance dependency (€30,000)</li>
+<li style="margin-bottom:6px">Inventory buffer extension to four weeks of production stock across key input materials (€40,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This option materially reduces the probability and severity of future supply disruptions. The trade-off is an increase in working capital requirements and ongoing supplier management overhead. The financial case depends on the assumed frequency and cost of future disruptions — if the previous incident was exceptional, the investment may exceed its return. If disruptions are a recurring risk, the cost of inaction is likely higher.`,
+                    cost: 105000,
+                    productionEffect: 0.02,
+                    optEffects: { financial: -2, green: 4, human: 6, resilience: 15, digital: 3 }
+                },
+                B: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Maintain current supplier relationships and operational structure while making targeted reductions in inventory carrying costs. This approach is premised on the view that the disruption was a low probability event and that structural reorganisation in response would be disproportionate.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Standard maintenance budget maintained at current levels with no protocol changes (€20,000)</li>
+<li style="margin-bottom:6px">Inventory reduction from current levels to a two-week buffer, releasing working capital (€25,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This option preserves financial flexibility and avoids the operational complexity of supply chain restructuring. The risk is that it leaves the underlying vulnerability unaddressed. If a similar disruption occurs in a subsequent period, the cumulative cost in downtime, client impact, and recovery will likely exceed the savings generated here. The option is most defensible if supported by evidence that the previous incident was genuinely exceptional rather than indicative of a broader systemic pattern.`,
+                    cost: 45000,
+                    productionEffect: -0.05,
+                    optEffects: { financial: 3, green: 2, human: 3, resilience: 6, digital: 2 }
+                },
+                C: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Acknowledge the operational vulnerability identified in the post incident review and address it through selective, proportionate investment, adding redundancy where the risk is highest without restructuring the entire supply chain model.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Contracting of one additional backup supplier for the highest-risk input category (€20,000)</li>
+<li style="margin-bottom:6px">Predictive maintenance sensor installation on critical production equipment to shift from reactive to anticipatory maintenance (€25,000)</li>
+<li style="margin-bottom:6px">Inventory buffer extended to three weeks across primary input materials (€30,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This option improves resilience meaningfully without the full capital commitment or working capital implications of the comprehensive restructuring approach. The limitation is that it addresses identified risks selectively rather than systemically, areas outside the scope of this investment remain exposed. The adequacy of the approach depends on how accurately the highest risk areas have been identified and how well they reflect the range of potential future disruptions.`,
+                    cost: 75000,
+                    productionEffect: 0,
+                    optEffects: { financial: 1, green: 3, human: 5, resilience: 10, digital: 4 }
+                }
             }
         },
         4: {
-            title: "Round 4: Sustainable Resilience",
-            story: "Management focuses on balancing environmental sustainability with long-term operational resilience.",
+            title: "The Defining Commitment",
+            subtitle: "Round 4",
+            context: "The transition review confirms meaningful progress across several KPI dimensions. The final investment round requires leadership to make a definitive commitment on the company's long-term environmental and operational positioning. The decision will determine how BuddyBikes is perceived, and how it performs, as Industry 5.0 standards become the market baseline. Three proposals are under review.",
+            story: `<h3>Situation Overview</h3>
+<p>BuddyBikes reaches its final transition decision point having made a series of strategic commitments that have collectively reshaped the organisation's operating model. The KPI trajectory reflects progress in some dimensions and ongoing gaps in others. What is clear is that the transition is not yet complete, and the decisions made in this round will determine whether the company arrives at a genuine Industry 5.0 operating model or settles for a partial transition.</p>
+<p>The external environment has continued to move in a direction that makes strong sustainability performance increasingly consequential. Market expectations around environmental accountability have hardened, with certification requirements and carbon reporting obligations expanding across the company's key commercial channels. Competitors who have moved earlier on infrastructure and process redesign are beginning to demonstrate cost and reputational advantages that will compound over time.</p>
+<p>Internally, the organisation has built meaningful capability through previous rounds of investment. The question is whether to leverage that capability in service of an ambitious environmental agenda, a financially conservative one, or a strategically balanced position that attempts to advance both.</p>
+<p>Each of the three proposals before leadership represents a distinct theory of value creation, one that prioritises environmental leadership, one that prioritises financial sustainability, and one that attempts to advance both through digital infrastructure and supply chain diversification. The choice will define the company's competitive positioning and operational character for the years ahead.</p>`,
             baseProduction: 1500,
             options: {
-                A: { name: "Green Leadership Strategy", description: "60% recycling (€50,000), solar integration (€45,000), closed-loop supply chain (€35,000).", cost: 130000, productionEffect: 0.03, optEffects: { financial: -18, green: 20, human: 3, resilience: 15, digital: 5 } },
-                B: { name: "Cost-Controlled Sustainability", description: "30% recycling (€20,000), energy efficiency (€15,000), supplier sustainability criteria (€10,000).", cost: 45000, productionEffect: -0.02, optEffects: { financial: -6, green: 10, human: 2, resilience: 7, digital: 3 } },
-                C: { name: "Adaptive Eco-Resilience Strategy", description: "45% recycling (€35,000), digital monitoring (€30,000), supplier diversification (€20,000).", cost: 85000, productionEffect: 0.01, optEffects: { financial: -12, green: 14, human: 4, resilience: 12, digital: 10 } }
+                A: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Make a decisive, high-visibility commitment to environmental performance that positions BuddyBikes as a sustainability leader within its manufacturing segment. This approach accepts significant short-term financial pressure in exchange for a material improvement in environmental metrics and long-term market positioning.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Process redesign to achieve 60% recycling rate across production materials, requiring operational changes beyond standard sorting and waste management (€50,000)</li>
+<li style="margin-bottom:6px">Solar energy integration into the production cycle, extending beyond facility-level generation into process-level consumption management (€45,000)</li>
+<li style="margin-bottom:6px">Closed-loop supply chain initiative to systematise material recovery and reuse across the production process (€35,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This is the most environmentally ambitious option and the most financially demanding in this round. The case for this approach rests on the premise that the market will increasingly differentiate on environmental credentials and that early movers will secure structural advantages in premium segments and ESG-aligned procurement channels. The near term financial impact is significant, and the operational changes required are substantial. The risk of under-delivery on implementation is higher than in the lower investment options.`,
+                    cost: 130000,
+                    productionEffect: 0.03,
+                    optEffects: { financial: -3, green: 20, human: 3, resilience: 15, digital: 5 }
+                },
+                B: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Advance environmental performance at a pace that can be sustained within current financial constraints, on the basis that commitments which cannot be maintained through budget cycles are strategically counterproductive.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Recycling rate improvement targeting 30% of production materials, achievable within existing procurement and waste management structures (€20,000)</li>
+<li style="margin-bottom:6px">Energy efficiency upgrades focused on highest-consumption equipment (€15,000)</li>
+<li style="margin-bottom:6px">Sustainability criteria introduced into new supplier contracts without retroactive application to existing relationships (€10,000)</li>
+</ul>
+
+
+<strong>Key considerations:</strong> This option generates credible, measurable environmental progress at the lowest capital commitment in this round. The trade-off is a more modest improvement in environmental metrics and a positioning that may not satisfy the expectations of partners and stakeholders who have indicated they will require more significant progress in the medium term. The approach is most coherent if accompanied by a clearly communicated roadmap that positions this round as an interim step rather than a terminal position.`,
+                    cost: 45000,
+                    productionEffect: -0.02,
+                    optEffects: { financial: 3, green: 10, human: 2, resilience: 7, digital: 3 }
+                },
+                C: {
+                    name: "Details",
+                    description: `<strong>Strategic rationale:</strong> Pursue meaningful environmental improvement while simultaneously strengthening operational and supply chain resilience, using digital infrastructure as the connecting layer between both objectives.
+
+<strong>Investment breakdown:</strong>
+<ul style="margin: 10px 0 10px 16px;">
+<li style="margin-bottom:6px">Recycling rate improvement to 45% of production materials through process and procurement adjustments (€35,000)</li>
+<li style="margin-bottom:6px">Real-time digital monitoring platform for environmental performance tracking across facility operations (€30,000)</li>
+<li style="margin-bottom:6px">Supplier diversification into partners meeting defined sustainability criteria, strengthening both environmental and supply chain positioning (€20,000)</li>
+</ul>
+
+<strong>Key considerations:</strong> This option creates value across multiple dimensions simultaneously, environmental, operational, and digital, which may prove more durable than single dimension investment at this stage of the transition. The limitation is that improvements in any individual area are less pronounced than the focused alternatives. Whether the breadth of impact justifies the reduction in depth depends on the company's specific gap profile entering this round and the relative weight placed on each dimension by key stakeholders.`,
+                    cost: 85000,
+                    productionEffect: 0.01,
+                    optEffects: { financial: 1, green: 14, human: 4, resilience: 12, digital: 10 }
+                }
             }
         }
     };
@@ -491,187 +430,413 @@
     let gameState = {
         currentRound: 1,
         cash: 500000,
-        kpis: { financial: 70, human: 55, green: 40, resilience: 50, digital: 35 },
+        kpis: { financial: 65, human: 20, green: 20, resilience: 30, digital: 60 },
         history: [],
-        kpiHistory: [{ round: 0, financial: 70, human: 55, green: 40, resilience: 50, digital: 35 }]
+        kpiHistory: [{ round: 0, financial: 65, human: 20, green: 20, resilience: 30, digital: 60 }]
     };
-
     let selectedOptionKey = null;
-    let currentBaseVars = {
-        R: 50, E: 50, S: 50, B: 3, T: 50, P: 5, A: 50,
-        C: 50, M: 50, D: 50, SupDiv: 50,
-        Price: 250,  // Selling price per frame (€)
-        Units: 1000   // Base units produced
-    };
-
+    let currentBaseVars = { R: 50, E: 50, S: 50, B: 3, T: 50, P: 5, A: 50, Price: 250, Units: 1000 };
     let kpiChart = null;
 
     function updateChart() {
         const ctx = document.getElementById('kpiChart');
         if (!ctx) return;
-
         const rounds = gameState.kpiHistory.map(h => `Round ${h.round}`);
-        const financialData = gameState.kpiHistory.map(h => h.financial);
-        const humanData = gameState.kpiHistory.map(h => h.human);
-        const greenData = gameState.kpiHistory.map(h => h.green);
-        const resilienceData = gameState.kpiHistory.map(h => h.resilience);
-        const digitalData = gameState.kpiHistory.map(h => h.digital);
-
-        if (kpiChart) {
-            kpiChart.destroy();
-        }
-
+        if (kpiChart) kpiChart.destroy();
         kpiChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: rounds,
                 datasets: [
-                    { label: 'Financial', data: financialData, borderColor: '#f5a65a', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#f5a65a', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
-                    { label: 'Human Index', data: humanData, borderColor: '#5a9eff', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#5a9eff', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
-                    { label: 'Green Index', data: greenData, borderColor: '#4cbf7e', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#4cbf7e', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
-                    { label: 'Resilience', data: resilienceData, borderColor: '#b77ef0', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#b77ef0', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
-                    { label: 'Digitalization', data: digitalData, borderColor: '#f06292', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#f06292', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 }
+                    { label: 'Financial', data: gameState.kpiHistory.map(h => h.financial), borderColor: '#f5a65a', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#f5a65a', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                    { label: 'Human Index', data: gameState.kpiHistory.map(h => h.human), borderColor: '#5a9eff', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#5a9eff', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                    { label: 'Green Index', data: gameState.kpiHistory.map(h => h.green), borderColor: '#4cbf7e', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#4cbf7e', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                    { label: 'Resilience', data: gameState.kpiHistory.map(h => h.resilience), borderColor: '#b77ef0', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#b77ef0', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                    { label: 'Digitalization', data: gameState.kpiHistory.map(h => h.digital), borderColor: '#f06292', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#f06292', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 }
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { position: 'top', labels: { color: '#eef2ff', font: { size: 11 } } },
-                    tooltip: { mode: 'index', intersect: false }
-                },
+                responsive: true, maintainAspectRatio: true,
+                plugins: { legend: { position: 'top', labels: { color: '#eef2ff', font: { size: 11 } } }, tooltip: { mode: 'index', intersect: false } },
                 scales: {
-                    y: { min: 0, max: 100, grid: { color: '#2c4458' }, title: { display: true, text: 'KPI Value', color: '#bcd0df' } },
-                    x: { grid: { color: '#2c4458' }, title: { display: true, text: 'Rounds', color: '#bcd0df' }, ticks: { color: '#bcd0df' } }
+                    y: { min: 0, max: 100, grid: { color: '#2c4458' }, title: { display: true, text: "KPI Value", color: '#bcd0df' } },
+                    x: { grid: { color: '#2c4458' }, title: { display: true, text: "Rounds", color: '#bcd0df' }, ticks: { color: '#bcd0df' } }
                 }
             }
         });
     }
 
-    function calculateRevenueAndProfit(round) {
+    // ─────────────────────────────────────────────────────────────
+    // REALISTIC INTERDEPENDENT CALCULATION ENGINE
+    //
+    // Core principle: Financial health cannot decouple from the other
+    // four pillars. Each pillar creates tangible operational effects
+    // that flow directly into revenue, cost, and margin:
+    //
+    //  HUMAN    → workforce productivity, absenteeism, rework cost,
+    //             recruitment spend, quality defect rate
+    //  GREEN    → regulatory exposure, ESG client access, energy cost,
+    //             material waste, premium pricing eligibility
+    //  RESILIENCE → disruption frequency, downtime cost, recovery spend,
+    //               delivery reliability (affects client retention)
+    //  DIGITAL  → throughput efficiency, cost per unit, defect detection,
+    //             data-driven decision speed
+    //
+    // These effects are applied BEFORE the financial KPI is updated,
+    // so the financial score is a consequence of the full system —
+    // not an independent variable the player can game in isolation.
+    // ─────────────────────────────────────────────────────────────
+
+    function diminishingReturn(currentKPI) {
+        // Gains decelerate near the ceiling — realistic because the
+        // easiest improvements come first; marginal gains get harder.
+        if (currentKPI >= 92) return 0.15;
+        if (currentKPI >= 80) return 0.35;
+        if (currentKPI >= 65) return 0.65;
+        return 1.0;
+    }
+
+    function calculateOperationalMetrics(round, optionKey) {
+        const kpi = gameState.kpis;
+        const vars = currentBaseVars;
         const roundData = roundsData[round];
-        const baseProduction = roundData.baseProduction;
-        const optionEffect = selectedOptionKey ? roundData.options[selectedOptionKey].productionEffect : 0;
+        const optKey = optionKey || selectedOptionKey;
+        const optionEffect = optKey ? roundData.options[optKey].productionEffect : 0;
 
-        // Production volume affected by strategic choice and human index
-        const humanFactor = 1 + (gameState.kpis.human - 50) / 100;
-        const digitalFactor = 1 + (gameState.kpis.digital - 50) / 200;
-        const resilienceFactor = 1 + (gameState.kpis.resilience - 50) / 200;
+        // ── REVENUE SIDE ──────────────────────────────────────────
 
-        let totalUnits = Math.floor(baseProduction * (1 + optionEffect) * humanFactor * digitalFactor * resilienceFactor);
-        totalUnits = Math.max(500, Math.min(3000, totalUnits));
+        // 1. Price elasticity: market punishes overpricing
+        //    Optimal price band: €220–300. Outside it, demand drops sharply.
+        // Price realism: BodyBike frames are industrial B2B components.
+        // Market ceiling ~€280. Above €300 demand erodes sharply.
+        // Above €330 the product is commercially unviable — clients source elsewhere.
+        const price = Math.min(350, Math.max(100, vars.Price)); // hard clamp regardless of input
+        const priceOptimal = 220;
+        const priceDelta = (price - priceOptimal) / priceOptimal;
+        const demandMultiplier = priceDelta > 0
+            ? Math.max(0.05, 1 - 1.6 * priceDelta)   // demand erodes above €220; collapses above ~€310
+            : Math.min(1.30, 1 - 0.5 * priceDelta);  // underpricing gives modest volume gain
 
-        // Selling price affected by green index and human index
-        let price = currentBaseVars.Price;
-        const greenPremium = 1 + (gameState.kpis.green - 50) / 200;
-        const humanPremium = 1 + (gameState.kpis.human - 50) / 300;
-        const finalPrice = price * greenPremium * humanPremium;
+        // 2. Actual units produced — human & digital KPIs shape real output
+        //    Low human KPI → absenteeism, errors, slower throughput
+        //    Low digital KPI → manual bottlenecks, scheduling failures
+        //    Low resilience → partial shutdowns reducing achievable output
+        const humanProductivity  = 0.5 + (kpi.human / 100) * 0.8;       // range 0.5–1.3
+        const digitalThroughput  = 0.6 + (kpi.digital / 100) * 0.7;     // range 0.6–1.3
+        const resilienceUptime   = 0.55 + (kpi.resilience / 100) * 0.65; // range 0.55–1.2
 
-        // Production cost per unit (affected by efficiency)
-        let baseCostPerUnit = 120;
-        const efficiencyFactor = 1 - (gameState.kpis.digital - 50) / 400;
-        const greenEfficiency = 1 - (gameState.kpis.green - 50) / 500;
-        const costPerUnit = baseCostPerUnit * efficiencyFactor * greenEfficiency;
+        let producedUnits = Math.floor(
+            vars.Units * (1 + optionEffect)
+            * humanProductivity * digitalThroughput * resilienceUptime
+        );
+        producedUnits = Math.max(150, Math.min(3500, producedUnits));
 
-        const revenue = totalUnits * finalPrice;
-        const productionCost = totalUnits * costPerUnit;
+        // 3. Units sold — demand is shaped by price elasticity AND green reputation
+        //    Green index above 60 opens ESG-conscious B2B channels (volume premium)
+        //    Green index below 30 starts losing sustainability-mandatory contracts
+        const greenDemandBonus = kpi.green >= 60
+            ? 1 + (kpi.green - 60) / 200      // up to +20% volume from green credentials
+            : kpi.green < 30
+                ? 0.75 + (kpi.green / 30) * 0.25  // losing contracts: down to 75% of demand
+                : 1.0;
 
-        return { revenue, productionCost, totalUnits, finalPrice, costPerUnit };
+        const soldUnits = Math.min(producedUnits,
+            Math.floor(producedUnits * demandMultiplier * greenDemandBonus)
+        );
+
+        // 4. Selling price premium — green & human credentials allow modest uplift
+        //    Only kicks in meaningfully above KPI 55 — below that, no premium available
+        const greenPriceBonus  = kpi.green  > 55 ? 1 + (kpi.green  - 55) / 350 : 1.0;
+        const humanPriceBonus  = kpi.human  > 55 ? 1 + (kpi.human  - 55) / 500 : 1.0;
+        const effectivePrice   = vars.Price * greenPriceBonus * humanPriceBonus;
+        const revenue          = soldUnits * effectivePrice;
+
+        // ── COST SIDE ─────────────────────────────────────────────
+
+        // 5. Base cost per unit — digital efficiency reduces it; low human KPI raises it
+        //    Low human → higher error rate → rework cost per unit increases
+        //    Low digital → manual inefficiency → slower, more expensive production
+        const digitalEfficiency = 1 - (kpi.digital - 50) / 500;  // ±10% range
+        const humanReworkCost   = kpi.human < 50
+            ? 1 + (50 - kpi.human) / 80   // low human adds up to ~62% cost premium
+            : 1.0;
+        const baseCostPerUnit = Math.max(75, 125 * digitalEfficiency * humanReworkCost);
+
+        // 6. Unsold inventory: produced but not sold creates disposal and holding cost
+        const unsoldUnits    = Math.max(0, producedUnits - soldUnits);
+        const inventoryCost  = unsoldUnits * 35;
+
+        // 7. Disruption cost from low resilience — supply shocks, emergency sourcing,
+        //    client penalties. Below 40 resilience, these become material.
+        const disruptionCost = kpi.resilience < 40
+            ? (40 - kpi.resilience) * 3500   // up to €140k in disruption costs at resilience=0
+            : kpi.resilience < 60
+                ? (60 - kpi.resilience) * 800
+                : 0;
+
+        // 8. Regulatory & energy cost exposure from low green index
+        //    Below 35: fines, mandatory audits, energy surcharges start appearing
+        const greenPenaltyCost = kpi.green < 35
+            ? (35 - kpi.green) * 2800
+            : 0;
+
+        // 9. Recruitment & retention cost from low human index
+        //    High turnover = constant recruitment, onboarding, lost institutional knowledge
+        const humanAttritionCost = kpi.human < 45
+            ? (45 - kpi.human) * 2200
+            : 0;
+
+        const productionCost = (producedUnits * baseCostPerUnit)
+            + inventoryCost + disruptionCost + greenPenaltyCost + humanAttritionCost;
+
+        return { revenue, productionCost, soldUnits, producedUnits, effectivePrice, baseCostPerUnit };
+    }
+
+    function calculateBaseCost(vars) {
+        const Bn = (vars.B - 1); // 0–4 extra suppliers above minimum
+        const unitOverheadCost = Math.max(0, (vars.Units - 500) * 16);
+        return Math.floor(
+            vars.R * 160   +   // recycling: infrastructure, process redesign, certification
+            vars.E * 210   +   // renewable energy: installation, contracts, transition
+            vars.S * 155   +   // process optimisation: consulting, tooling, lean programmes
+            Bn  * 13000    +   // each backup supplier: contracts, audits, dual-source overhead
+            vars.T * 110   +   // training: programme design, time off floor, facilitators
+            vars.P * 1600  +   // salary increase: applied across full production headcount
+            vars.A * 230   +   // AI/automation: licences, hardware, integration, support
+            unitOverheadCost   // higher production targets → more materials, floor hours, QC
+        );
+    }
+
+    function getBaseEffects(vars, round) {
+        const Bn = (vars.B - 1) / 4;
+
+        // Each round has a strategic focus. The same slider value produces a strong
+        // KPI return if it is the right lever for the round — and near-zero return
+        // (but the same financial cost) if it is the wrong lever.
+        // Spending on the wrong priority costs money without moving the KPI → net drag on Financial.
+
+        let green, human, resilience, digital;
+
+        if (round === 1) {
+            // ROUND 1 — Human Capital: T and P are high-value; others low-value
+            human      = 0.18 * vars.T + 2.0 * vars.P - 0.10 * vars.A;
+            green      = 0.01 * vars.R + 0.01 * vars.E;
+            resilience = 1.5 * Bn + 0.005 * vars.S;
+            digital    = 0.04 * vars.A + 0.01 * vars.S;
+
+        } else if (round === 2) {
+            // ROUND 2 — Sustainability: R and E dominate; T and P have near-zero green return
+            green      = 0.16 * vars.R + 0.20 * vars.E + 0.06 * vars.S;
+            human      = 0.02 * vars.T + 0.3  * vars.P - 0.02 * vars.A;
+            resilience = 1.5 * Bn + 0.01 * vars.S;
+            digital    = 0.05 * vars.A + 0.02 * vars.E + 0.02 * vars.S;
+
+        } else if (round === 3) {
+            // ROUND 3 — Resilience: B is critical; T, P, R, E near-zero resilience return
+            resilience = 18 * Bn + 0.08 * vars.S + 0.02 * vars.R;
+            green      = 0.02 * vars.R + 0.02 * vars.E;
+            human      = 0.02 * vars.T + 0.2  * vars.P - 0.01 * vars.A;
+            digital    = 0.04 * vars.A + 0.02 * vars.S;
+
+        } else {
+            // ROUND 4 — Long-term positioning: all levers active, green/digital dominate
+            green      = 0.10 * vars.R + 0.13 * vars.E + 0.04 * vars.S;
+            human      = 0.08 * vars.T + 1.0  * vars.P - 0.03 * vars.A;
+            resilience = 7  * Bn + 0.04 * vars.S + 0.02 * vars.T + 0.02 * vars.R;
+            digital    = 0.12 * vars.A + 0.04 * vars.S + 0.02 * vars.E;
+        }
+
+        // Indirect financial drag from misallocation (direct cost already in calculateBaseCost)
+        const financial = -0.003 * vars.R - 0.004 * vars.E - 0.003 * vars.S
+                        - 0.5 * Bn - 0.003 * vars.T - 0.25 * vars.P - 0.004 * vars.A;
+
+        return { green, human, resilience, digital, financial };
     }
 
     function calculateFinancialImpact(round, optionKey) {
         const option = roundsData[round].options[optionKey];
-        const baseEffects = getBaseEffects(round, currentBaseVars);
-        const optEffects = option.optEffects;
-
-        const { revenue, productionCost, totalUnits, finalPrice, costPerUnit } = calculateRevenueAndProfit(round);
-
-        // Net profit from operations
+        const { revenue, productionCost } = calculateOperationalMetrics(round, optionKey);
         const operationalProfit = revenue - productionCost;
+        const baseCost = calculateBaseCost(currentBaseVars);
+        const totalChange = operationalProfit - option.cost - baseCost;
 
-        // Strategic investment cost
-        const strategicCost = option.cost;
-
-        // Base decision implementation costs
-        const baseCost = calculateBaseCost(currentBaseVars, round);
-
-        // Total financial change
-        const totalChange = operationalProfit - strategicCost - baseCost;
-
-        // Financial KPI change (influenced by operational performance)
-        const financialKPIEffect = (totalChange / 10000) + optEffects.financial + baseEffects.financial;
-
-        return {
-            financialEffect: financialKPIEffect,
-            totalChange: totalChange,
-            revenue: revenue,
-            productionCost: productionCost,
-            totalUnits: totalUnits,
-            finalPrice: finalPrice,
-            costPerUnit: costPerUnit
-        };
-    }
-
-    function getBaseEffects(round, vars) {
-        if (round === 4) {
-            return {
-                financial: -0.03 * vars.R - 0.05 * vars.E - 0.04 * vars.C - 0.025 * vars.M - 0.04 * vars.D - 0.03 * vars.SupDiv,
-                green: 0.12 * vars.R + 0.15 * vars.E + 0.10 * vars.C + 0.08 * vars.M + 0.07 * vars.D + 0.06 * vars.SupDiv,
-                human: 0.01 * vars.D + 0.015 * vars.SupDiv,
-                resilience: 0.02 * vars.R + 0.06 * vars.E + 0.08 * vars.C + 0.04 * vars.M + 0.07 * vars.D + 0.09 * vars.SupDiv,
-                digital: 0.03 * vars.E + 0.02 * vars.M + 0.12 * vars.D
-            };
-        } else {
-            const Bn = (vars.B - 1) / 4;
-            let baseEffects = {
-                financial: -0.02 * vars.R - 0.05 * vars.E - 0.04 * vars.S - 3 * Bn - 0.03 * vars.T - 1.5 * vars.P - 0.06 * vars.A,
-                green: 0.08 * vars.R + 0.12 * vars.E + 0.10 * vars.S - 1 * Bn,
-                human: 0.10 * vars.T + 1.2 * vars.P + 0.02 * vars.A,
-                digital: 0.02 * vars.E + 0.02 * vars.S + 0.025 * vars.T + 0.12 * vars.A
-            };
-
-            if (round === 3) {
-                baseEffects.resilience = 0.015 * vars.R + 0.04 * vars.E + 0.015 * vars.S + 14 * Bn + 0.04 * vars.T + 0.5 * vars.P + 0.05 * vars.A;
-            } else {
-                baseEffects.resilience = 0.015 * vars.R + 0.04 * vars.E + 0.015 * vars.S + 10 * Bn + 0.04 * vars.T + 0.5 * vars.P + 0.05 * vars.A;
-            }
-            return baseEffects;
-        }
-    }
-
-    function calculateBaseCost(vars, round) {
-        if (round === 4) {
-            return Math.floor(vars.R * 180 + vars.E * 220 + vars.C * 200 + vars.M * 150 + vars.D * 250 + vars.SupDiv * 200);
-        } else {
-            return Math.floor(vars.R * 180 + vars.E * 220 + vars.S * 200 + (vars.B - 1) * 15000 + vars.T * 120 + vars.P * 1800 + vars.A * 250);
-        }
+        // Scale operational profit to KPI delta.
+        // Calibrated so a well-balanced round yields roughly +3 to +8 pts,
+        // a neglected operation yields -5 to -15, and no single lever can
+        // swing more than ±18 pts regardless of how extreme the inputs are.
+        const rawDelta = totalChange / 18000;
+        const opsFinancialDelta = Math.max(-18, Math.min(18, rawDelta));
+        return { financialEffect: opsFinancialDelta, totalChange, revenue, productionCost };
     }
 
     function calculateNewKPIs(round, optionKey) {
         const option = roundsData[round].options[optionKey];
-        const baseEffects = getBaseEffects(round, currentBaseVars);
-        const optEffects = option.optEffects;
+        const baseEffects = getBaseEffects(currentBaseVars, round);
         const financialImpact = calculateFinancialImpact(round, optionKey);
+        const kpi = gameState.kpis;
+
+        // Diminishing returns applied individually per pillar
+        const dr = {
+            financial:  diminishingReturn(kpi.financial),
+            human:      diminishingReturn(kpi.human),
+            green:      diminishingReturn(kpi.green),
+            resilience: diminishingReturn(kpi.resilience),
+            digital:    diminishingReturn(kpi.digital),
+        };
+
+        // ── INTERDEPENDENCY PENALTIES ──────────────────────────────
+        // Financial KPI is penalised if other pillars are critically low.
+        // This models the real cost of neglect — you cannot report strong
+        // financial performance if your workforce is burning out, your
+        // supply chain is fragile, or regulators are circling.
+        const humanPenalty      = kpi.human      < 40 ? (40 - kpi.human)      * 0.18 : 0;
+        const greenPenalty      = kpi.green       < 35 ? (35 - kpi.green)      * 0.15 : 0;
+        const resiliencePenalty = kpi.resilience  < 38 ? (38 - kpi.resilience) * 0.20 : 0;
+        const digitalPenalty    = kpi.digital     < 30 ? (30 - kpi.digital)    * 0.10 : 0;
+        const totalNeglectPenalty = humanPenalty + greenPenalty + resiliencePenalty + digitalPenalty;
+
+        // ── INTERDEPENDENCY BONUSES ────────────────────────────────
+        // When multiple pillars are strong simultaneously, they amplify
+        // each other — a skilled workforce using good digital tools in a
+        // resilient operation is more than the sum of its parts.
+        const synergyBonus = (kpi.human > 65 && kpi.digital > 65)
+            ? (kpi.human - 65 + kpi.digital - 65) * 0.04   // human+digital synergy
+            : 0;
+        const greenResilienceBonus = (kpi.green > 60 && kpi.resilience > 60)
+            ? (kpi.green - 60 + kpi.resilience - 60) * 0.03 // sustainable resilience premium
+            : 0;
+
+        const financialDelta =
+            (option.optEffects.financial * dr.financial)
+            + financialImpact.financialEffect
+            + baseEffects.financial
+            - totalNeglectPenalty
+            + synergyBonus + greenResilienceBonus;
 
         return {
-            financial: Math.min(100, Math.max(0, gameState.kpis.financial + optEffects.financial + baseEffects.financial + financialImpact.financialEffect)),
-            green: Math.min(100, Math.max(0, gameState.kpis.green + optEffects.green + baseEffects.green)),
-            human: Math.min(100, Math.max(0, gameState.kpis.human + optEffects.human + baseEffects.human)),
-            resilience: Math.min(100, Math.max(0, gameState.kpis.resilience + optEffects.resilience + baseEffects.resilience)),
-            digital: Math.min(100, Math.max(0, gameState.kpis.digital + optEffects.digital + baseEffects.digital))
+            financial:  Math.min(100, Math.max(0, kpi.financial  + financialDelta)),
+            green:      Math.min(100, Math.max(0, kpi.green      + (option.optEffects.green      + baseEffects.green)      * dr.green)),
+            human:      Math.min(100, Math.max(0, kpi.human      + (option.optEffects.human      + baseEffects.human)      * dr.human)),
+            resilience: Math.min(100, Math.max(0, kpi.resilience + (option.optEffects.resilience + baseEffects.resilience) * dr.resilience)),
+            digital:    Math.min(100, Math.max(0, kpi.digital    + (option.optEffects.digital    + baseEffects.digital)    * dr.digital)),
         };
+    }
+
+    const kpiDescriptions = {
+        financial: {
+            label: "Financial Health",
+            color: "#f5a65a",
+            bands: [
+                { max: 20, status: "Critical", text: "BuddyBikes is in financial distress. Margins are negative or near zero — the company is spending more than it earns. At this level, the transition budget is at risk, suppliers may tighten credit terms, and the board will be asking hard questions about viability. Urgent corrective action is needed." },
+                { max: 40, status: "Stressed", text: "The company is generating revenue but margins are thin and under pressure. Investment commitments are straining cash flow. There is enough runway to continue the transition, but little room for error. Any further cost increases or revenue shortfalls will be difficult to absorb." },
+                { max: 60, status: "Stable", text: "BuddyBikes is financially stable. Margins are positive, cash flow is manageable, and the transition investments are being funded without existential pressure. This is the minimum acceptable position for a company in active strategic transformation." },
+                { max: 75, status: "Healthy", text: "The company is in a strong financial position. Revenue is growing, cost efficiency is improving, and there is meaningful headroom to absorb disruptions or accelerate investment. The transition is self-funding at this level." },
+                { max: 100, status: "Excellent", text: "BuddyBikes is performing exceptionally well financially. Margins are strong, the balance sheet is healthy, and the company has the financial flexibility to lead rather than follow on Industry 5.0 investment. Stakeholders and partners will notice." }
+            ]
+        },
+        human: {
+            label: "Human Index",
+            color: "#5a9eff",
+            bands: [
+                { max: 20, status: "Critical", text: "The workforce is in crisis. Absenteeism is high, experienced workers are leaving, and those who remain are disengaged. Quality defect rates are rising and floor supervisors are spending more time on conflict resolution than production. The transition cannot proceed on human foundations this weak." },
+                { max: 40, status: "Struggling", text: "Staff morale is low and turnover is above industry average. Workers feel undervalued and disconnected from the company direction. Training investment is insufficient to close the skills gap that Industry 5.0 demands. Recruitment costs are quietly eating into margin." },
+                { max: 60, status: "Developing", text: "The workforce is functional and broadly engaged, but not yet operating at the level Industry 5.0 requires. Skills gaps remain in key technical areas. Workers understand the transition direction but are not yet active participants in it. More investment in training and compensation will compound well from here." },
+                { max: 75, status: "Strong", text: "BuddyBikes has a capable, motivated workforce. Retention is good, cross-functional skills are developing, and the shop floor is contributing ideas rather than just executing instructions. This is the level at which human-machine collaboration starts working as intended." },
+                { max: 100, status: "Exceptional", text: "The workforce is a genuine competitive advantage. Workers are highly skilled, deeply engaged, and actively co-developing the company processes. Attrition is minimal. The human-centric model is fully operational — this is what Industry 5.0 looks like at its best." }
+            ]
+        },
+        green: {
+            label: "Green Index",
+            color: "#4cbf7e",
+            bands: [
+                { max: 20, status: "Critical", text: "BuddyBikes environmental performance is a liability. Regulatory exposure is high — fines and mandatory audits are likely. Two key retail partners have flagged carbon intensity concerns. At this level, the company is at risk of losing ESG-sensitive contracts and faces rising energy costs with no hedge in place." },
+                { max: 40, status: "Below Standard", text: "Environmental performance is below market expectations. The company meets minimum legal requirements but cannot credibly claim sustainability credentials. Procurement questionnaires from clients are difficult to answer. Energy costs remain fully exposed to market volatility." },
+                { max: 60, status: "Progressing", text: "BuddyBikes has made meaningful environmental progress and can demonstrate it to clients. Carbon intensity per unit is declining, waste rates are improving, and the company can respond credibly to sustainability questionnaires. A modest green premium on pricing is now defensible." },
+                { max: 75, status: "Strong", text: "The company environmental credentials are a commercial asset. ESG-aligned procurement channels are open, and green performance is a positive factor in client retention. Energy cost exposure is significantly reduced through renewable sourcing." },
+                { max: 100, status: "Leading", text: "BuddyBikes is an environmental leader in its manufacturing segment. The circular model is operational, carbon intensity is near-minimal, and sustainability is a genuine differentiator in the market. Premium pricing is fully supported by independently verifiable green credentials." }
+            ]
+        },
+        resilience: {
+            label: "Resilience",
+            color: "#b77ef0",
+            bands: [
+                { max: 20, status: "Critical", text: "The operation is extremely fragile. A single supplier failure, equipment breakdown, or logistics disruption will halt production — potentially for weeks. The company has no meaningful buffer stock, no alternative sourcing, and reactive maintenance only. The cost of the next disruption could be existential." },
+                { max: 40, status: "Vulnerable", text: "Supply chain redundancy is insufficient. The company has experienced disruptions and has not structurally addressed the vulnerabilities they exposed. Maintenance is still largely reactive. A moderate disruption would take two to three weeks to recover from and would damage client relationships." },
+                { max: 60, status: "Adequate", text: "BuddyBikes has basic resilience measures in place. There is some supplier redundancy and a modest inventory buffer. The company can absorb a minor disruption without production stopping entirely, though recovery would still take time. Further strengthening would meaningfully reduce risk." },
+                { max: 75, status: "Robust", text: "The operation can absorb significant disruptions without halting production. Supplier diversification is in place, maintenance protocols are largely preventive, and inventory buffers provide meaningful protection. Clients can rely on delivery commitments." },
+                { max: 100, status: "Exceptional", text: "BuddyBikes operates with full supply chain redundancy and predictive maintenance across all critical systems. Disruptions that would shut down competitors are absorbed as manageable variances. Delivery reliability is a key commercial differentiator." }
+            ]
+        },
+        digital: {
+            label: "Digitalization",
+            color: "#f06292",
+            bands: [
+                { max: 20, status: "Lagging", text: "The factory is operating on largely manual processes. Data collection is inconsistent, scheduling is done by spreadsheet, and there is no real-time visibility into production performance. Decision-making is slow and based on incomplete information. Digital capability at this level is a competitive liability." },
+                { max: 40, status: "Early Stage", text: "Some digital tools are in place but integration is limited. Systems do not communicate with each other, and data-driven decision-making is the exception rather than the rule. Process optimisation opportunities are being missed because the infrastructure to identify them does not exist yet." },
+                { max: 60, status: "Developing", text: "BuddyBikes has functional digital infrastructure in core production areas. Real-time data is available to supervisors, and AI-assisted scheduling is beginning to reduce waste. The foundation for human-machine collaboration is in place, though full integration is still ahead." },
+                { max: 75, status: "Advanced", text: "Digital systems are deeply embedded in operations. Predictive maintenance, real-time quality monitoring, and AI-driven production planning are operational. Workers use digital tools as a natural extension of their roles. Cost per unit is visibly lower as a result." },
+                { max: 100, status: "Industry 5.0 Ready", text: "BuddyBikes has achieved full digital integration — humans and intelligent systems work in genuine collaboration. The factory generates actionable data at every stage of production, enabling continuous improvement at a pace that manual operations cannot match. This is the digital standard Industry 5.0 is built on." }
+            ]
+        }
+    };
+
+    function getKPIBand(kpiKey, value) {
+        const bands = kpiDescriptions[kpiKey].bands;
+        return bands.find(b => value <= b.max) || bands[bands.length - 1];
+    }
+
+    function showKPIPopup(kpiKey) {
+        const existing = document.getElementById('infoOverlay');
+        if (existing) existing.remove();
+        const desc = kpiDescriptions[kpiKey];
+        const value = Math.round(gameState.kpis[kpiKey]);
+        const band = getKPIBand(kpiKey, value);
+        const overlay = document.createElement('div');
+        overlay.id = 'infoOverlay';
+        overlay.className = 'info-overlay';
+        overlay.innerHTML = `
+            <div class="info-popup" style="max-width:520px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+                    <div>
+                        <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;color:#7ab3c8;margin-bottom:4px;">${desc.label}</div>
+                        <div style="display:flex;align-items:baseline;gap:12px;">
+                            <span style="font-size:2.4rem;font-weight:700;color:${desc.color};line-height:1;">${value}</span>
+                            <span style="font-size:1rem;font-weight:600;color:${desc.color};">${band.status}</span>
+                        </div>
+                    </div>
+                    <button id="closeInfoPopup" style="background:none;border:none;color:#7ab3c8;font-size:1.4rem;cursor:pointer;padding:0;margin-left:16px;line-height:1;">&times;</button>
+                </div>
+                <div style="height:6px;background:#1e3345;border-radius:3px;margin-bottom:18px;overflow:hidden;">
+                    <div style="height:100%;width:${value}%;background:${desc.color};border-radius:3px;transition:width 0.4s;"></div>
+                </div>
+                <p style="color:#bcd0df;line-height:1.75;font-size:0.9rem;margin:0;">${band.text}</p>
+            </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById('closeInfoPopup').onclick = () => overlay.remove();
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
     }
 
     function updateKPIs() {
         const container = document.getElementById('kpiDashboard');
         if (!container) return;
-        container.innerHTML = `
-            <div class="kpi-card financial"><div>Financial</div><div class="kpi-value">${Math.round(gameState.kpis.financial)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.financial}%; background:#f5a65a"></div></div></div>
-            <div class="kpi-card human"><div>Human Index</div><div class="kpi-value">${Math.round(gameState.kpis.human)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.human}%; background:#5a9eff"></div></div></div>
-            <div class="kpi-card green"><div>Green Index</div><div class="kpi-value">${Math.round(gameState.kpis.green)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.green}%; background:#4cbf7e"></div></div></div>
-            <div class="kpi-card resilience"><div>Resilience</div><div class="kpi-value">${Math.round(gameState.kpis.resilience)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.resilience}%; background:#b77ef0"></div></div></div>
-            <div class="kpi-card digital"><div>Digitalization</div><div class="kpi-value">${Math.round(gameState.kpis.digital)}</div><div class="progress-track"><div class="progress-fill" style="width:${gameState.kpis.digital}%; background:#f06292"></div></div></div>
-        `;
+        const k = gameState.kpis;
+        const cards = [
+            { key: 'financial',  label: 'Financial',      value: k.financial,  color: '#f5a65a' },
+            { key: 'human',      label: 'Human Index',    value: k.human,      color: '#5a9eff' },
+            { key: 'green',      label: 'Green Index',    value: k.green,      color: '#4cbf7e' },
+            { key: 'resilience', label: 'Resilience',     value: k.resilience, color: '#b77ef0' },
+            { key: 'digital',    label: 'Digitalization', value: k.digital,    color: '#f06292' },
+        ];
+        container.innerHTML = cards.map(c => `
+            <div class="kpi-card ${c.key}" data-kpi="${c.key}" style="cursor:pointer;position:relative;">
+                <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;color:#7ab3c8;">${c.label}</div>
+                <div class="kpi-value" style="color:${c.color};">${Math.round(c.value)}</div>
+                <div class="progress-track"><div class="progress-fill" style="width:${c.value}%;background:${c.color};"></div></div>
+                <div style="font-size:0.7rem;color:#4c7a9a;margin-top:8px;">tap for details</div>
+            </div>`).join('');
+        container.querySelectorAll('.kpi-card').forEach(card => {
+            card.onclick = () => showKPIPopup(card.getAttribute('data-kpi'));
+        });
         updateChart();
     }
 
@@ -679,59 +844,134 @@
         document.getElementById('sideRound').innerText = gameState.currentRound;
     }
 
+    const baseDecisionInfo = {
+        Price: {
+            label: 'Selling Price per Frame (€)',
+            min: 100, max: 350, step: 5, default: 220,
+            info: 'The unit selling price for each BodyBike frame (€). The realistic market range for a premium e-bike structural frame is €100–350. Pricing above €280 begins to erode volume significantly — buyers switch to alternatives. Strong green credentials or high human index can support a modest premium, but there is a hard ceiling beyond which demand collapses regardless of brand positioning. The sweet spot balancing margin and volume is typically €190–260.'
+        },
+        Units: {
+            label: 'Frames to Produce (units)',
+            min: 200, max: 3000, step: 50, default: 1000,
+            info: 'The number of BodyBike frames you plan to manufacture this round. More units spread fixed costs and increase revenue potential — but only if demand supports it. Setting production targets above what the market will absorb at your chosen price creates unsold inventory and waste. Your actual output is also shaped by your workforce capability and operational systems: ambitious targets with weak foundations lead to quality or delivery failures.'
+        },
+        R: {
+            label: 'R — Recycling Rate (%)',
+            min: 0, max: 100, step: 1, default: 50,
+            info: 'The proportion of production materials that are recovered, recycled, or reused rather than sent to waste. This reflects BuddyBikes\' commitment to circular manufacturing — a core Industry 5.0 principle. Higher recycling rates reduce raw material dependency and waste disposal costs over time, and strengthen the company\'s environmental credentials with customers and regulators. However, building the infrastructure and processes to achieve high recycling rates requires meaningful upfront investment.'
+        },
+        E: {
+            label: 'E — Renewable Energy (%)',
+            min: 0, max: 100, step: 1, default: 50,
+            info: 'The share of factory energy consumption sourced from renewable generation — solar, wind, or certified green procurement. Shifting away from grid electricity reduces the company\'s carbon intensity per unit, which is increasingly scrutinised by retail partners and institutional buyers. It also provides a degree of energy cost stability in a volatile utility market. The transition requires infrastructure investment proportional to the target share.'
+        },
+        S: {
+            label: 'S — Process Optimisation',
+            min: 0, max: 100, step: 1, default: 50,
+            info: 'The degree to which production workflows, quality controls, and operational procedures have been analysed, standardised, and improved. Process optimisation reduces waste, rework, and variability across the production line. It is foundational to both sustainability improvements and digital integration — you cannot automate or monitor a process that is not well-defined. Higher values represent deeper investment in lean methodologies, workflow redesign, and operational discipline.'
+        },
+        B: {
+            label: 'B — Backup Suppliers (1–5)',
+            min: 1, max: 5, step: 1, default: 3,
+            info: 'The number of qualified supplier relationships maintained for critical input materials and components. A single supplier is the lowest-cost configuration but creates a single point of failure — one disruption halts production entirely. Each additional backup supplier adds contracting, onboarding, and relationship management costs, but provides meaningful protection against supply chain shocks. The value of redundancy is invisible when conditions are stable and significant when they are not.'
+        },
+        T: {
+            label: 'T — Training Investment',
+            min: 0, max: 100, step: 1, default: 50,
+            info: 'The level of structured learning and development provided to the production workforce, measured as an index of hours and programme breadth. Training is the primary mechanism through which human capability translates into operational performance. Workers who understand the systems they operate, the processes they follow, and the goals they are contributing to make better decisions, fewer errors, and adapt more effectively to change. This is the foundational investment for a human-centric manufacturing model.'
+        },
+        P: {
+            label: 'P — Salary Increase (%)',
+            min: 0, max: 10, step: 0.5, default: 5,
+            info: 'The percentage increase in base compensation applied across the production workforce. Salary levels directly affect the company\'s ability to attract, retain, and motivate skilled workers — particularly as the transition to Industry 5.0 raises the capability bar for every role on the floor. Underpaying in a tight labour market drives attrition of the experienced staff the transition depends on. This is one of the most direct levers on workforce stability, but also one of the most significant recurring cost commitments.'
+        },
+        A: {
+            label: 'A — AI & Automation Investment',
+            min: 0, max: 100, step: 1, default: 50,
+            info: 'The level of investment in artificial intelligence, intelligent monitoring systems, and digital automation infrastructure. This drives process efficiency, predictive capability, and data-informed decision-making across the operation. However, the relationship between automation and the workforce requires careful management: technology that supports and augments workers builds capability and trust, while technology that displaces or marginalises them undermines the human-centric principles that Industry 5.0 is built on. High values here may improve output metrics while creating friction in the human dimension.'
+        }
+    };
+
+    function showInfoPopup(field) {
+        const existing = document.getElementById('infoOverlay');
+        if (existing) existing.remove();
+        const overlay = document.createElement('div');
+        overlay.id = 'infoOverlay';
+        overlay.className = 'info-overlay';
+        overlay.innerHTML = `
+            <div class="info-popup">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+                    <strong style="color:#7ab3c8;font-size:1rem;line-height:1.4;">${baseDecisionInfo[field].label}</strong>
+                    <button id="closeInfoPopup" style="background:none;border:none;color:#7ab3c8;font-size:1.4rem;cursor:pointer;padding:0;margin-left:16px;line-height:1;">&times;</button>
+                </div>
+                <p style="color:#bcd0df;line-height:1.75;font-size:0.9rem;margin:0;">${baseDecisionInfo[field].info}</p>
+            </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById('closeInfoPopup').onclick = () => overlay.remove();
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+    }
+
     function renderBaseDecisions() {
         const container = document.getElementById('baseDecisionsContainer');
         if (!container) return;
 
-        container.innerHTML = `
-            <div class="base-decision-item"><div class="base-decision-label"><span> Selling Price per Frame (€)</span><span id="val_Price">${currentBaseVars.Price}</span></div><input type="number" class="base-input" id="input_Price" min="150" max="450" value="${currentBaseVars.Price}" step="5"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> Base Units Produced</span><span id="val_Units">${currentBaseVars.Units}</span></div><input type="number" class="base-input" id="input_Units" min="500" max="2500" value="${currentBaseVars.Units}" step="50"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> R - Recycling Rate</span><span id="val_R">${currentBaseVars.R}</span></div><input type="number" class="base-input" id="input_R" min="0" max="100" value="${currentBaseVars.R}"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> E - Renewable Energy</span><span id="val_E">${currentBaseVars.E}</span></div><input type="number" class="base-input" id="input_E" min="0" max="100" value="${currentBaseVars.E}"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> S - Process Optimization</span><span id="val_S">${currentBaseVars.S}</span></div><input type="number" class="base-input" id="input_S" min="0" max="100" value="${currentBaseVars.S}"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> B - Backup Suppliers (1-5)</span><span id="val_B">${currentBaseVars.B}</span></div><input type="number" class="base-input" id="input_B" min="1" max="5" value="${currentBaseVars.B}"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> T - Training Hours</span><span id="val_T">${currentBaseVars.T}</span></div><input type="number" class="base-input" id="input_T" min="0" max="100" value="${currentBaseVars.T}"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> P - Salary Increase %</span><span id="val_P">${currentBaseVars.P}</span></div><input type="number" class="base-input" id="input_P" min="0" max="10" step="0.5" value="${currentBaseVars.P}"></div>
-            <div class="base-decision-item"><div class="base-decision-label"><span> A - AI Infrastructure</span><span id="val_A">${currentBaseVars.A}</span></div><input type="number" class="base-input" id="input_A" min="0" max="100" value="${currentBaseVars.A}"></div>
-        `;
-
         const fields = ['Price', 'Units', 'R', 'E', 'S', 'B', 'T', 'P', 'A'];
+        container.innerHTML = fields.map(f => {
+            const cfg = baseDecisionInfo[f];
+            const val = currentBaseVars[f];
+            return `
+            <div class="base-decision-item">
+                <div class="base-decision-label" style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
+                    <span style="flex:1;">${cfg.label}</span>
+                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                        <span id="val_${f}" style="color:#4cbf7e;font-weight:600;">${val}</span>
+                        <span class="info-icon" data-field="${f}" tabindex="0" role="button" aria-label="Info about ${cfg.label}">i</span>
+                    </div>
+                </div>
+                <input type="number" class="base-input" id="input_${f}" min="${cfg.min}" max="${cfg.max}" step="${cfg.step || 1}" value="${val}">
+            </div>`;
+        }).join('');
+
+        document.querySelectorAll('.info-icon').forEach(icon => {
+            icon.onclick = function(e) {
+                e.stopPropagation();
+                showInfoPopup(this.getAttribute('data-field'));
+            };
+        });
+
         fields.forEach(f => {
+            const cfg = baseDecisionInfo[f];
             const input = document.getElementById(`input_${f}`);
-            if (input) {
-                input.oninput = function() {
-                    let val = parseFloat(this.value);
-                    if (isNaN(val)) val = f === 'Price' ? 250 : (f === 'Units' ? 1000 : 50);
-                    if (f === 'B') val = Math.min(5, Math.max(1, val));
-                    else if (f === 'P') val = Math.min(10, Math.max(0, val));
-                    else if (f === 'Price') val = Math.min(450, Math.max(150, val));
-                    else if (f === 'Units') val = Math.min(2500, Math.max(500, val));
-                    else val = Math.min(100, Math.max(0, val));
-                    currentBaseVars[f] = val;
-                    const span = document.getElementById(`val_${f}`);
-                    if (span) span.innerText = val;
-                };
-            }
+            if (input) input.oninput = function() {
+                let val = parseFloat(this.value);
+                if (isNaN(val)) val = cfg.default;
+                val = Math.min(cfg.max, Math.max(cfg.min, val));
+                currentBaseVars[f] = val;
+                const span = document.getElementById(`val_${f}`);
+                if (span) span.innerText = val;
+            };
         });
     }
 
     function renderDecisions() {
         const round = roundsData[gameState.currentRound];
+        document.getElementById('roundSubtitle').innerText = round.subtitle;
         document.getElementById('roundTitle').innerText = round.title;
-        document.getElementById('roundStory').innerHTML = round.story;
+        document.getElementById('roundContext').innerHTML = `<p>${round.context}</p>`;
+        document.getElementById('roundStoryFull').innerHTML = round.story;
 
         const container = document.getElementById('optionsContainer');
         container.innerHTML = '';
-
-        const letters = Object.keys(round.options);
-        letters.forEach(letter => {
+        Object.keys(round.options).forEach(letter => {
             const opt = round.options[letter];
             const div = document.createElement('div');
             div.className = 'option-card';
             div.setAttribute('data-opt', letter);
             div.innerHTML = `
                 <div class="option-letter">${letter}</div>
+                <div class="option-title">${opt.name}</div>
                 <div class="option-text">${opt.description}</div>
+
             `;
             div.onclick = function() {
                 document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
@@ -741,7 +981,6 @@
             };
             container.appendChild(div);
         });
-
         renderBaseDecisions();
         document.getElementById('confirmBtn').disabled = true;
         selectedOptionKey = null;
@@ -750,12 +989,10 @@
     function updateHistory() {
         const container = document.getElementById('historyList');
         if (!container) return;
-
         if (gameState.history.length === 0) {
             container.innerHTML = '<div class="history-item">No decisions made yet.</div>';
             return;
         }
-
         container.innerHTML = gameState.history.map(h => `
             <div class="history-item">
                 <strong>Round ${h.round}</strong><br>
@@ -768,63 +1005,85 @@
     function showSection(sectionId) {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
         document.getElementById(sectionId + 'Section').classList.add('active-section');
-
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
-
-        if (sectionId === 'kpis') {
-            updateKPIs();
-            updateChart();
-        }
+        if (sectionId === 'kpis') { updateKPIs(); updateChart(); }
         if (sectionId === 'results') updateHistory();
     }
 
     function submitDecision() {
         if (!selectedOptionKey) return;
-
         const round = roundsData[gameState.currentRound];
         const option = round.options[selectedOptionKey];
-
         const newKPIs = calculateNewKPIs(gameState.currentRound, selectedOptionKey);
-        const baseCost = calculateBaseCost(currentBaseVars, gameState.currentRound);
+        const baseCost = calculateBaseCost(currentBaseVars);
         const financialImpact = calculateFinancialImpact(gameState.currentRound, selectedOptionKey);
-
         gameState.cash += financialImpact.totalChange;
         gameState.kpis = newKPIs;
-
-        gameState.kpiHistory.push({
-            round: gameState.currentRound,
-            financial: newKPIs.financial,
-            human: newKPIs.human,
-            green: newKPIs.green,
-            resilience: newKPIs.resilience,
-            digital: newKPIs.digital
-        });
-
-        gameState.history.push({
-            round: gameState.currentRound,
-            optionName: option.name,
-            strategicCost: option.cost,
-            baseCost: baseCost
-        });
-
+        gameState.kpiHistory.push({ round: gameState.currentRound, ...newKPIs });
+        gameState.history.push({ round: gameState.currentRound, optionName: option.name, strategicCost: option.cost, baseCost });
         gameState.currentRound++;
-
         updateKPIs();
         updateSidebar();
         updateHistory();
-
         if (gameState.currentRound > 4) {
             document.getElementById('gameScreen').classList.remove('active');
-            const avgScore = (gameState.kpis.human + gameState.kpis.green + gameState.kpis.resilience) / 3;
-            const verdict = avgScore >= 70 ? " Industry 5.0 Achieved! Excellent transformation!" : (avgScore >= 55 ? " On the Right Path. Good progress!" : " Room for Growth. Needs stronger commitment.");
+            const summaryCards = [
+    { key: 'financial',  label: 'Financial',      value: gameState.kpis.financial,  color: '#f5a65a' },
+    { key: 'human',      label: 'Human Index',    value: gameState.kpis.human,      color: '#5a9eff' },
+    { key: 'green',      label: 'Green Index',    value: gameState.kpis.green,      color: '#4cbf7e' },
+    { key: 'resilience', label: 'Resilience',     value: gameState.kpis.resilience, color: '#b77ef0' },
+    { key: 'digital',    label: 'Digitalization', value: gameState.kpis.digital,    color: '#f06292' },
+];
+document.getElementById('summaryContent').innerHTML = `
+    <div class="kpi-grid" style="margin-top:8px;">
+        ${summaryCards.map(c => `
+        <div class="kpi-card ${c.key}" data-kpi="${c.key}" style="cursor:pointer;">
+            <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;color:#7ab3c8;">${c.label}</div>
+            <div class="kpi-value" style="color:${c.color};">${Math.round(c.value)}</div>
+            <div class="progress-track"><div class="progress-fill" style="width:${c.value}%;background:${c.color};"></div></div>
+            <div style="font-size:0.7rem;color:#4c7a9a;margin-top:8px;">tap for details</div>
+        </div>`).join('')}
+    </div>
+`;
+document.getElementById('summaryContent').querySelectorAll('.kpi-card').forEach(card => {
+    card.onclick = () => showKPIPopup(card.getAttribute('data-kpi'));
+});
 
-            document.getElementById('summaryContent').innerHTML = `
-                <div class="kpi-grid"><div class="kpi-card financial"><div>Financial</div><div class="kpi-value">${Math.round(gameState.kpis.financial)}</div></div><div class="kpi-card human"><div>Human</div><div class="kpi-value">${Math.round(gameState.kpis.human)}</div></div><div class="kpi-card green"><div>Green</div><div class="kpi-value">${Math.round(gameState.kpis.green)}</div></div><div class="kpi-card resilience"><div>Resilience</div><div class="kpi-value">${Math.round(gameState.kpis.resilience)}</div></div><div class="kpi-card digital"><div>Digital</div><div class="kpi-value">${Math.round(gameState.kpis.digital)}</div></div></div>
-                <p style="margin-top:20px"><strong>${verdict}</strong></p>
-                <p>Final Cash: €${Math.floor(gameState.cash).toLocaleString()}</p>
-            `;
             document.getElementById('summaryScreen').classList.add('active');
+            // Chart toggle
+            let summaryChart = null;
+            let chartVisible = false;
+            document.getElementById('toggleChartBtn').onclick = function() {
+                const container = document.getElementById('summaryChartContainer');
+                chartVisible = !chartVisible;
+                container.style.display = chartVisible ? 'block' : 'none';
+                this.textContent = chartVisible ? 'Hide KPI Chart' : 'View KPI Chart';
+                if (chartVisible && !summaryChart) {
+                    const ctx = document.getElementById('summaryKpiChart');
+                    summaryChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: gameState.kpiHistory.map(h => `Round ${h.round}`),
+                            datasets: [
+                                { label: 'Financial',     data: gameState.kpiHistory.map(h => h.financial),  borderColor: '#f5a65a', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#f5a65a', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                                { label: 'Human Index',   data: gameState.kpiHistory.map(h => h.human),      borderColor: '#5a9eff', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#5a9eff', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                                { label: 'Green Index',   data: gameState.kpiHistory.map(h => h.green),      borderColor: '#4cbf7e', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#4cbf7e', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                                { label: 'Resilience',    data: gameState.kpiHistory.map(h => h.resilience), borderColor: '#b77ef0', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#b77ef0', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 },
+                                { label: 'Digitalization',data: gameState.kpiHistory.map(h => h.digital),    borderColor: '#f06292', backgroundColor: 'transparent', tension: 0.3, pointBackgroundColor: '#f06292', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7 }
+                            ]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: true,
+                            plugins: { legend: { position: 'top', labels: { color: '#eef2ff', font: { size: 11 } } }, tooltip: { mode: 'index', intersect: false } },
+                            scales: {
+                                y: { min: 0, max: 100, grid: { color: '#2c4458' }, title: { display: true, text: "KPI Value", color: '#bcd0df' } },
+                                x: { grid: { color: '#2c4458' }, ticks: { color: '#bcd0df' } }
+                            }
+                        }
+                    });
+                }
+            };
         } else {
             renderDecisions();
             showSection('decisions');
@@ -832,49 +1091,31 @@
     }
 
     function resetGame() {
-        gameState = {
-            currentRound: 1,
-            cash: 500000,
-            kpis: { financial: 70, human: 55, green: 40, resilience: 50, digital: 35 },
-            history: [],
-            kpiHistory: [{ round: 0, financial: 70, human: 55, green: 40, resilience: 50, digital: 35 }]
-        };
+        gameState = { currentRound: 1, cash: 500000, kpis: { financial: 65, human: 20, green: 20, resilience: 30, digital: 60 }, history: [], kpiHistory: [{ round: 0, financial: 65, human: 20, green: 20, resilience: 30, digital: 60 }] };
         selectedOptionKey = null;
-        currentBaseVars = { R: 50, E: 50, S: 50, B: 3, T: 50, P: 5, A: 50, C: 50, M: 50, D: 50, SupDiv: 50, Price: 250, Units: 1000 };
-        updateKPIs();
-        updateSidebar();
-        renderDecisions();
-        updateHistory();
-        updateChart();
+        currentBaseVars = { R: 50, E: 50, S: 50, B: 3, T: 50, P: 5, A: 50, Price: 250, Units: 1000 };
+        updateKPIs(); updateSidebar(); renderDecisions(); updateHistory(); updateChart();
     }
 
-    // Initialize all event listeners
     document.getElementById('startMissionBtn').onclick = function() {
         document.getElementById('landingScreen').classList.remove('active');
         document.getElementById('missionScreen').classList.add('active');
     };
-
     document.getElementById('playNowBtn').onclick = function() {
         document.getElementById('missionScreen').classList.remove('active');
         document.getElementById('gameScreen').classList.add('active');
-        resetGame();
-        showSection('decisions');
+        resetGame(); showSection('decisions');
     };
-
     document.getElementById('restartBtn').onclick = function() {
         document.getElementById('summaryScreen').classList.remove('active');
+        document.getElementById('summaryChartContainer').style.display = 'none';
+        document.getElementById('toggleChartBtn').textContent = 'View KPI Chart';
         document.getElementById('landingScreen').classList.add('active');
     };
-
     document.getElementById('confirmBtn').onclick = submitDecision;
-
     document.querySelectorAll('.nav-item').forEach(item => {
-        item.onclick = function() {
-            showSection(this.getAttribute('data-section'));
-        };
+        item.onclick = function() { showSection(this.getAttribute('data-section')); };
     });
-
-    // Initial render
     resetGame();
 </script>
 </body>
